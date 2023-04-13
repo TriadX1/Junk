@@ -1,0 +1,798 @@
+0:0:0.0 --> 0:0:0.420
+Bradley.Sando
+Here.
+0:0:10.910 --> 0:0:15.350
+Bradley.Sando
+Some reason everything closed on me. Give me just a second while I get that back up here.
+0:0:20.680 --> 0:0:27.310
+Bradley.Sando
+There we go. Alright, so just a quick recap on this, what the project is is open LM.
+0:0:28.450 --> 0:0:33.310
+Bradley.Sando
+Needs to be upgraded. It is currently running on version I believe 5.4.
+0:0:34.730 --> 0:0:36.830
+Bradley.Sando
+And it will have to go through a couple of steps.
+0:0:37.890 --> 0:1:1.510
+Bradley.Sando
+It will need to go to the 5.6 version which updates the database schemas and brings them up to the current database format. Then that basically will prepare it for the version 23 upgrade. So then once the 5.6 is done, we can go to the to the version 23. I know there were some updated.
+0:1:3.50 --> 0:1:24.870
+Bradley.Sando
+Server requirements just for the number. I think the number of cores they and the amount of memory needs to be updated. But John I I think you know from your conversation earlier on this and looking at what that server is, I'm not certain that that that we need to update it from what it is right now.
+0:1:26.320 --> 0:1:40.340
+Bradley.Sando
+It does add a couple of instances of SQL databases, but those look that they should be able to run on the same SQL Server, so that shouldn't be an issue. It's not like we have to stand up another SQL Server for those.
+0:1:43.230 --> 0:1:58.210
+Bradley.Sando
+Also, as far as the applications that the open LM server is connecting to to pull down the licensing information, the scope of that is not changing from the current state. Is that correct Nick?
+0:2:0.500 --> 0:2:1.810
+Nick.Currie
+Our our new.
+0:2:2.790 --> 0:2:6.580
+Nick.Currie
+Licensing agreement does allow us an unlimited.
+0:2:7.260 --> 0:2:20.110
+Nick.Currie
+Number of vendor daemons. So we will absolutely be looking to connect it to as many of the keyword engineering or the engineering side license servers as possible.
+0:2:29.470 --> 0:2:30.170
+Nick.Currie
+Absolutely.
+0:2:21.560 --> 0:2:40.690
+Bradley.Sando
+OK, so, but uh, what I have called out here I believe is the same as what our current state is. And as far as this project, I what I would recommend is that we stick with these get get these all pulling on version 23 and then you know then we can start probably adding additional ones after the upgrade.
+0:2:44.880 --> 0:2:45.450
+Bradley.Sando
+Yeah, yeah.
+0:2:41.120 --> 0:2:50.50
+Nick.Currie
+Yeah, agreed. I probably got a little too ahead of myself on that one. That is definitely something future probably hanging out in that same category as the power BI reporting.
+0:3:0.970 --> 0:3:1.220
+Nick.Currie
+Umm.
+0:2:50.440 --> 0:3:2.890
+Bradley.Sando
+Right. Yeah, I put that on here too, just because we know that at some point that that will be a, a, A probably requirement, but it's not in scope for right now. One other piece.
+0:3:4.790 --> 0:3:6.60
+Bradley.Sando
+Let me see if I can.
+0:3:8.530 --> 0:3:15.670
+Bradley.Sando
+A touch on real quick, I know that the new version does support directory sync and SSO.
+0:3:17.250 --> 0:3:24.420
+Bradley.Sando
+I'm not sure if that's a requirement that we would implement at this point, but it might be something that we would want to consider.
+0:3:25.130 --> 0:3:29.880
+Nick.Currie
+Absolutely down the road, probably same bucket as the additional servers and the power BI for sure.
+0:3:32.70 --> 0:3:48.790
+Bradley.Sando
+OK. And yeah, then I guess one other comment on it. Quick was the the licensing, the new licensing does support unlimited like licenses which then like you said we could add as many additional servers we wanna monitor at that point.
+0:3:49.50 --> 0:3:49.460
+Nick.Currie
+Umm.
+0:3:49.930 --> 0:3:52.940
+Bradley.Sando
+So I guess my question for John on that is.
+0:3:54.680 --> 0:4:2.590
+Bradley.Sando
+All of these servers that the open LM is currently connecting to. I know on your landscape diagram you do have those called out.
+0:4:4.840 --> 0:4:10.980
+Bradley.Sando
+And I'm I'm assuming that when the process that they're gonna wanna go through is when they want to add a new.
+0:4:11.530 --> 0:4:17.430
+Bradley.Sando
+Ohm server then that they're going to want to to work through you again so that we can get those.
+0:4:17.510 --> 0:4:21.310
+Bradley.Sando
+Uh, new ones added to the landscape diagram as well.
+0:4:22.470 --> 0:4:28.380
+Speaker 1
+So can you pull up Chrome real quick and go to any of the current open LM servers for your diagram?
+0:4:31.390 --> 0:4:32.530
+Bradley.Sando
+No. Let me see.
+0:4:42.850 --> 0:4:45.300
+Bradley.Sando
+So you want me to browse to?
+0:4:47.140 --> 0:4:50.390
+Speaker 1
+Sure. KPE DOL, MAW, P001.
+0:4:50.970 --> 0:4:51.820
+Bradley.Sando
+This one right here.
+0:4:51.320 --> 0:4:51.870
+Speaker 1
+Go to there.
+0:4:52.720 --> 0:4:53.10
+Bradley.Sando
+OK.
+0:4:52.980 --> 0:4:53.240
+Speaker 1
+Yeah.
+0:5:14.390 --> 0:5:14.900
+Bradley.Sando
+Looks.
+0:5:14.30 --> 0:5:17.860
+Nick.Currie
+Pay the link I sent in chat might be what you're actually looking for.
+0:5:18.610 --> 0:5:22.770
+Speaker 1
+Yeah, I don't. I don't think what you have on diagram is how it works at all. So.
+0:5:28.920 --> 0:5:31.150
+Bradley.Sando
+See the chat here.
+0:5:50.90 --> 0:5:51.20
+Nick.Currie
+Admin admin.
+0:5:52.690 --> 0:5:54.130
+Nick.Currie
+If you want to get in right.
+0:6:24.50 --> 0:6:32.520
+Nick.Currie
+And if you're if what we're looking for is just what's connected to it already, you can just hit the license servers thing down in the bottom there.
+0:6:47.400 --> 0:6:50.440
+Nick.Currie
+Is this what we're after? Are we looking to correct?
+0:6:51.140 --> 0:7:2.10
+Nick.Currie
+That key would admin line into the open LM server where it right now says HTTPS and port. What was that 443?
+0:7:1.500 --> 0:7:4.80
+Bradley.Sando
+Or 43 which should be 17.
+0:7:2.980 --> 0:7:6.280
+Nick.Currie
+Where it should just be in HTTP in the.
+0:7:7.390 --> 0:7:8.460
+Nick.Currie
+7019.
+0:7:9.360 --> 0:7:9.770
+Bradley.Sando
+Team.
+0:7:11.420 --> 0:7:12.370
+Speaker 1
+Their work around.
+0:7:17.600 --> 0:7:20.470
+Speaker 1
+Yeah, it's not HTTPS, there's no encryption there.
+0:7:22.510 --> 0:7:34.10
+Speaker 1
+OK, so all those unlabeled lines there. The reason why the landscape diagram just has an orange line with question Mark question Mark question Mark is because I don't know what that's actually talking to or how.
+0:7:34.870 --> 0:7:35.360
+Speaker 1
+Uh.
+0:7:39.230 --> 0:7:44.710
+Bradley.Sando
+So the protocol that it's using to talk to those servers we we don't know what that is or what the port is.
+0:7:46.530 --> 0:7:52.110
+Speaker 1
+I don't. I mean how, how would it connect to SAP? What SAP system is it actually connecting to?
+0:8:12.270 --> 0:8:12.810
+Speaker 1
+OK.
+0:7:56.90 --> 0:8:14.420
+Nick.Currie
+We're calling out, OK, that SAP should probably be designated as computers and structures. SAP is a computers and structures program, SAP 2000 structural analysis. It definitely not connecting to. Yeah.
+0:8:15.250 --> 0:8:15.670
+Nick.Currie
+That.
+0:8:15.660 --> 0:8:16.10
+Speaker 1
+Yeah.
+0:8:16.390 --> 0:8:18.550
+Nick.Currie
+The the more well known SAP.
+0:8:18.690 --> 0:8:19.120
+Bradley.Sando
+Yeah.
+0:8:19.280 --> 0:8:19.840
+Speaker 1
+Yeah.
+0:8:21.490 --> 0:8:23.710
+Bradley.Sando
+Let me what's a better way to label that?
+0:8:21.390 --> 0:8:23.980
+Speaker 1
+So there there's a lot of detail missing from there.
+0:8:27.720 --> 0:8:28.210
+Nick.Currie
+Yeah.
+0:8:31.610 --> 0:8:31.880
+Bradley.Sando
+OK.
+0:8:31.780 --> 0:8:32.550
+Nick.Currie
+Right, but that.
+0:8:25.540 --> 0:8:32.780
+Speaker 1
+Step 2000. That's actually what it's called in the ***. That's the real name of the product, which is unfortunate.
+0:8:33.650 --> 0:9:5.60
+Nick.Currie
+Yeah, yeah, it is. That server does host licenses for more applications than SA than SAP 2000. It's the entire computers and structures applications suite, so I if you want to call it SAP 2000, great. I know what you're talking about. I think anyone on the engineering side would know what you're talking about. But if you're looking to be specific down to vendor and how that server actually works, it would probably be better to call it computers and structures.
+0:9:5.350 --> 0:9:6.320
+Nick.Currie
+Licensing server.
+0:9:8.740 --> 0:9:20.50
+Speaker 1
+So when this is talking to those remote license servers, is it actually talking directly to the license service process, or is that the agent component that it's talking to on each of those servers?
+0:9:20.450 --> 0:9:37.300
+Nick.Currie
+So there is a a broker and a vendor daemon. The broker is what lives on the license server and it's that that piece that talks back to open LM to the Open LM main server and passes the the data.
+0:9:39.180 --> 0:9:50.560
+Nick.Currie
+In. Yeah, in. In all honesty, I do not know the protocol nor the port over over which that data is transmitted. It's. I'm sure I could find that out.
+0:9:51.740 --> 0:9:58.690
+Speaker 1
+Well, I mean, just directionality would be helpful because I'm trying to figure out is this a case of the open LM server going out and pulling?
+0:9:59.380 --> 0:10:3.610
+Speaker 1
+All those brokers or to the brokers just phone home to this thing failed.
+0:10:5.80 --> 0:10:5.680
+Nick.Currie
+Umm.
+0:10:11.570 --> 0:10:12.920
+Nick.Currie
+Question to discover.
+0:10:14.560 --> 0:10:16.200
+Speaker 1
+Oh, well. Well, let me.
+0:10:17.400 --> 0:10:18.210
+Speaker 1
+Skilled.
+0:10:14.580 --> 0:10:34.410
+Bradley.Sando
+Yeah, I believe I read that in the documentation that it actually reaches out to the broker and requests that information. And actually we did specify that in our context to the each of those brokers will also need to be updated as part of this project to bring them up to the current version of so that they can.
+0:10:35.550 --> 0:10:36.580
+Bradley.Sando
+So they have the right data.
+0:10:37.710 --> 0:10:38.80
+Speaker 1
+13.
+0:10:39.180 --> 0:10:43.330
+Speaker 1
+Yeah. So back in 2020, I think we built the new.
+0:10:44.170 --> 0:10:47.770
+Speaker 1
+2019 server up in Ashley thing here and.
+0:10:48.480 --> 0:10:58.600
+Speaker 1
+Didn't really know what was talking to it. The old one. The on Prem one was actually I think down in Lenexa at the time and I haven't checked recently and might still be down there.
+0:10:59.40 --> 0:10:59.400
+Speaker 1
+Uh.
+0:11:3.420 --> 0:11:4.230
+Nick.Currie
+Umm.
+0:11:0.550 --> 0:11:9.780
+Speaker 1
+Real quick. Yeah, that's the animal nexa. So that's a a legacy one that was tagged as decom, but it never got cleaned up after the last round of changes.
+0:11:10.240 --> 0:11:11.950
+Nick.Currie
+Ohh and it's still in use.
+0:11:12.860 --> 0:11:35.490
+Speaker 1
+I know, I know. Yeah. I was looking at utilization on both of them. The interesting thing is the majority of the utilization isn't on the app server at all. The app server is almost, you know, bored. It bounces from 5 to 15% used the majority of the banging is actually on that database that's hosted up in Paas and that thing's grown from like an S0 to an S3. So it's.
+0:11:37.0 --> 0:11:41.490
+Speaker 1
+I don't know roughly half what would be a sequel server. That's still paas.
+0:11:42.70 --> 0:11:50.890
+Speaker 1
+Ohm and I guess what I'm trying to figure out is we have the 2019 server already built up here. Is this just an in place software upgrade?
+0:11:51.550 --> 0:12:1.340
+Speaker 1
+For the open LM server on here and then the various agents out on those other machines. Or does this actually require a new 2019 server?
+0:12:2.70 --> 0:12:3.50
+Speaker 1
+And database.
+0:12:5.510 --> 0:12:5.890
+Speaker 1
+That.
+0:12:4.690 --> 0:12:8.580
+Nick.Currie
+My understanding is it would be an in place upgrade.
+0:12:10.580 --> 0:12:10.870
+Nick.Currie
+But.
+0:12:11.560 --> 0:12:18.160
+Nick.Currie
+I I honestly don't think anyone with anything was ever set up for the open LM service.
+0:12:18.840 --> 0:12:20.830
+Nick.Currie
+On that that Azure box.
+0:12:25.170 --> 0:12:25.930
+Speaker 1
+That's interesting.
+0:12:26.890 --> 0:12:27.630
+Speaker 1
+But me?
+0:12:28.740 --> 0:12:31.760
+Nick.Currie
+It is interesting. Unfortunately, it's not too surprising.
+0:12:54.190 --> 0:12:56.220
+Nick.Currie
+Zero administration.
+0:12:33.450 --> 0:12:59.870
+Speaker 1
+Yeah, that's about 1/3 of the servers that people requested back when Carrie was here. So there's a lot of unused stuff out there. Like we're finding that all over the place with the the smart plant job runners where they were created for individual projects and the project either went away or never took off. And so that server has been sitting there with stranded capacity. Meanwhile, the guys down in Houston are hooting and hollering because they don't have any capacity. They're all full.
+0:13:1.200 --> 0:13:1.600
+Nick.Currie
+Geez.
+0:13:0.530 --> 0:13:11.130
+Speaker 1
+So one problem or another anyway, so the but, but the database here is used. This database is very busy and I'm assuming the on Prem server is currently hitting it.
+0:13:11.680 --> 0:13:13.700
+Nick.Currie
+And that's that is my understanding, yeah.
+0:13:14.30 --> 0:13:15.620
+Speaker 1
+OK, OK.
+0:13:21.230 --> 0:13:21.630
+Speaker 1
+Yeah.
+0:13:14.370 --> 0:13:22.510
+Nick.Currie
+And and that that does make sense that a lot of the processing, a lot of the the work is being done on that that database side.
+0:13:22.720 --> 0:13:23.0
+Speaker 1
+Yeah.
+0:13:24.820 --> 0:13:29.790
+Nick.Currie
+And you know it, it growing exponentially and without rain is.
+0:13:35.190 --> 0:13:36.430
+Speaker 1
+I don't know the right now and I'm fine.
+0:13:31.80 --> 0:13:39.310
+Nick.Currie
+Well, it's it's our fault on the engineering side because nobody managed the open LM tool to even start cleaning up the database so.
+0:13:39.820 --> 0:13:48.230
+Bradley.Sando
+Right. And Nick, I think you'd actually called that out that as part of this project, that was part of the scope was actually doing some of that database cleanup, correct?
+0:13:47.930 --> 0:13:59.520
+Nick.Currie
+Mm-hmm. Yep. Open LM has a, you know, back out to database tool and then a clean up tool where we can just specify a date and everything prior to that, it just.
+0:14:0.770 --> 0:14:1.150
+Nick.Currie
+Nukes.
+0:14:4.950 --> 0:14:10.110
+Speaker 1
+OK. And you can do the in place schema upgrade on that database, so you don't need a a different database for that.
+0:14:11.350 --> 0:14:13.290
+Nick.Currie
+No, at least according to open LM.
+0:14:14.540 --> 0:14:15.430
+Nick.Currie
+As like.
+0:14:16.70 --> 0:14:22.220
+Nick.Currie
+Just like Bradley said, the first upgrade from version 5.4 to 5.6.
+0:14:24.360 --> 0:14:26.750
+Nick.Currie
+Handles, you know, upgrading.
+0:14:27.490 --> 0:14:37.940
+Nick.Currie
+The the component and service structure for open LM and like makes open LM talk out to the database and restructure the schema.
+0:14:38.960 --> 0:14:40.120
+Nick.Currie
+So that it's ready to go.
+0:14:46.300 --> 0:14:46.780
+Nick.Currie
+Yeah.
+0:14:41.370 --> 0:14:53.210
+Speaker 1
+OK. Well, I mean, it sounds like there's nothing new required in Azure and when when it's all said and done, James or someone can put in that decom ticket for the old KPD cluster box on Prem.
+0:14:53.930 --> 0:14:54.420
+Speaker 1
+I.
+0:14:53.800 --> 0:14:57.0
+Nick.Currie
+Yeah. So my well, so now my question is I wonder.
+0:14:57.780 --> 0:15:5.40
+Nick.Currie
+If I should go back to open LM and ask that, well, first I should check this Azure box and be sure that there's nothing running on it.
+0:15:5.880 --> 0:15:10.680
+Nick.Currie
+Because if there's nothing running on that Azure box that was built for the, you know.
+0:15:11.350 --> 0:15:13.280
+Nick.Currie
+To bring us to modern times.
+0:15:14.670 --> 0:15:19.560
+Nick.Currie
+Have to wonder if we're even running down. Like, why are we updating?
+0:15:20.520 --> 0:15:22.550
+Nick.Currie
+What we've got instead of.
+0:15:23.820 --> 0:15:24.840
+Nick.Currie
+Building something.
+0:15:26.730 --> 0:15:29.60
+Nick.Currie
+Been the on the new box where it should be.
+0:15:32.830 --> 0:15:33.900
+Nick.Currie
+Get in that thing.
+0:15:33.350 --> 0:15:48.930
+Speaker 1
+I guess originally the the utilization was so low on this product, there was no point in building a sequel server and actually paying the SQL license and all that stuff. And if you know, if we need to revisit that and this thing really is gonna.
+0:15:49.570 --> 0:16:0.320
+Speaker 1
+Continue to grow on the database, then maybe we can change the design, but you know it looks like right now you should be able to try to do whatever you want to do and.
+0:16:0.720 --> 0:16:1.260
+Nick.Currie
+OK.
+0:16:1.380 --> 0:16:4.90
+Speaker 1
+You know, if it doesn't work, we can back up and change.
+0:16:4.940 --> 0:16:5.930
+Speaker 1
+Change direction.
+0:16:7.890 --> 0:16:8.340
+Nick.Currie
+Yeah.
+0:16:13.310 --> 0:16:28.540
+Bradley.Sando
+Yeah, I'm. I'm curious too. Like, you know, you said that the data that's currently sitting in that database is goes all the way back to like 2010, correct? So you know, cleaning that up up to you 'cause you, you would basically remove everything prior to 2019.
+0:16:29.570 --> 0:16:34.390
+Bradley.Sando
+Umm, so that may end up freeing up a lot of resources on that database server.
+0:16:36.310 --> 0:16:37.920
+Nick.Currie
+Not expect it to as well.
+0:16:45.490 --> 0:16:48.510
+Nick.Currie
+Yeah, this Azure open LM server is just.
+0:16:49.710 --> 0:16:51.280
+Nick.Currie
+It it's just sitting there running.
+0:16:53.710 --> 0:16:58.920
+Nick.Currie
+There's there's nothing installed as far as open LM, no services running on it.
+0:16:59.760 --> 0:17:1.610
+Nick.Currie
+That I recognize from open LM.
+0:17:4.460 --> 0:17:8.890
+Speaker 1
+It sounds well, yeah. Like you said, that would be a completely standard.
+0:17:11.130 --> 0:17:11.720
+Nick.Currie
+Yeah.
+0:17:13.440 --> 0:17:13.950
+Nick.Currie
+Umm.
+0:17:15.350 --> 0:17:17.160
+Nick.Currie
+Alright, so I should ask.
+0:17:23.200 --> 0:17:25.280
+Nick.Currie
+But regardless of where.
+0:17:25.970 --> 0:17:31.420
+Nick.Currie
+Where this this ends up if we do the end place in place, upgrade on the on Prem server.
+0:17:32.190 --> 0:17:33.150
+Nick.Currie
+Or if we.
+0:17:35.150 --> 0:17:39.20
+Nick.Currie
+You know, just install everything fresh new on the the Azure box.
+0:17:42.210 --> 0:17:46.0
+Nick.Currie
+I mean, the landscape diagram doesn't change overly much, does it?
+0:17:52.810 --> 0:17:53.600
+Nick.Currie
+Absolutely.
+0:17:56.300 --> 0:17:57.490
+Nick.Currie
+Yeah, it's and it's.
+0:17:48.120 --> 0:17:58.90
+Speaker 1
+Well, I would say you probably want to pick the one with the newer operating system to do the install the old on Prem, one in lenexa's you know eight years old or something. So as soon as.
+0:17:58.940 --> 0:18:3.810
+Speaker 1
+Soon as we're done destroying all the 2012 boxes, we're going for the 20 sixteens so.
+0:18:4.470 --> 0:18:4.810
+Nick.Currie
+There.
+0:18:6.90 --> 0:18:6.740
+Nick.Currie
+Alright.
+0:18:5.250 --> 0:18:18.680
+Bradley.Sando
+So, so, so that would probably be the easiest process would be to migrate it over to the new new server and then do the in place upgrade from there. Is that what you're thinking? Are you thinking to do a fresh install on the new server?
+0:18:19.360 --> 0:18:30.470
+Nick.Currie
+Dan, I'm thinking the latter, the fresh install, why spend the time to migrate all this stuff from the old box to this Azure box if all we need to do is just?
+0:18:31.370 --> 0:18:33.380
+Nick.Currie
+Install version 20.
+0:18:34.790 --> 0:18:57.140
+Nick.Currie
+I don't know if we'd have to install version 23, so I need to ask open now. I need to talk to open LM support and find out if installing version 23 on a new box and pointing it to that server will upgrade the and restructure the database schema. Or if the first thing we should do is upgrade the on Prem to 5-6.
+0:18:58.140 --> 0:19:3.470
+Nick.Currie
+Then install on the Azure box and point that there so the database schemas already.
+0:19:4.820 --> 0:19:5.480
+Nick.Currie
+Updated.
+0:19:7.340 --> 0:19:11.10
+Bradley.Sando
+Yeah. And you also have to consider two, you have to update those brokers.
+0:19:13.350 --> 0:19:14.820
+Nick.Currie
+Yeah, yeah, and those.
+0:19:16.60 --> 0:19:16.510
+Nick.Currie
+I mean.
+0:19:19.880 --> 0:19:20.220
+Nick.Currie
+Or not.
+0:19:16.290 --> 0:19:22.680
+Bradley.Sando
+Not know if they're backwards compatible. If they are, you could update the brokers first, then do the open LM.
+0:19:23.240 --> 0:19:40.780
+Nick.Currie
+No, they're not. Unfortunately, somebody installed, probably Femi or Farhan, no big deal. Install the new broker on actually that computers and structures server we called out earlier and it hasn't been reporting any data legitimately for a while.
+0:19:41.540 --> 0:19:46.540
+Nick.Currie
+I'm showing license dates and sessions dates that start in 1969.
+0:19:51.210 --> 0:19:51.540
+Bradley.Sando
+OK.
+0:19:50.110 --> 0:19:54.520
+Nick.Currie
+So yeah, I I don't think upgrading the brokers first is the right way to go.
+0:19:54.830 --> 0:19:55.130
+Bradley.Sando
+No.
+0:19:59.370 --> 0:19:59.760
+Nick.Currie
+OK.
+0:20:11.470 --> 0:20:23.480
+Bradley.Sando
+And so I think the minimum minimum requirements on this was the for the 23 version with eight cores and 32 gigs of RAM. What is the current state of that new server?
+0:20:25.340 --> 0:20:32.930
+Speaker 1
+OK. Well I I think the performance goes on the database, not the app and it's 100 BTU's, so there's no comparison.
+0:20:33.590 --> 0:20:34.30
+Bradley.Sando
+OK.
+0:20:41.990 --> 0:20:42.410
+Nick.Currie
+Umm.
+0:20:44.780 --> 0:21:0.810
+Nick.Currie
+And I mean, John, I think in one of your early emails you pointed out that if we get that thing running version 23, when we notice that the server is just like dear God, I can't handle it. That's a, that's a point where we can look at upgrading the resources on that box.
+0:21:9.850 --> 0:21:10.250
+Nick.Currie
+OK.
+0:21:3.130 --> 0:21:10.920
+Speaker 1
+Yeah, the platform OPS guys do monitoring on all the servers, they know if they're out of RAM or they're pegged all the time and they can bump up the skew.
+0:21:11.540 --> 0:21:12.650
+Nick.Currie
+OK, excellent.
+0:21:11.730 --> 0:21:17.330
+Speaker 1
+I'm assuming that's how the database made it from AA10DT used to 100 or whatever somebody.
+0:21:18.100 --> 0:21:22.570
+Speaker 1
+Site pegged or saw query performance tank and they just bump the slider up.
+0:21:24.730 --> 0:21:25.70
+Bradley.Sando
+I.
+0:21:24.960 --> 0:21:25.450
+Nick.Currie
+How's the?
+0:21:26.150 --> 0:21:41.430
+Bradley.Sando
+You know, I guess, Nick, you that you know that might be a question we might want to ask open LM though is why that is using so many resources. From what I've seen, I mean the data that it's actually pulling from those is pretty minimal.
+0:21:43.640 --> 0:21:50.250
+Bradley.Sando
+I I I can't imagine why that would be taking up so much, so many so much resources in space.
+0:21:53.410 --> 0:22:3.260
+Speaker 1
+In the database you mean? I mean you can look at the queries and you know it'll it'll recommend all the indexes that the product should have that they probably don't. So.
+0:22:3.720 --> 0:22:8.560
+Bradley.Sando
+Right. Well, and how often it's polling, because I'm sure I'm assuming it's logging every time it pulls.
+0:22:12.170 --> 0:22:13.410
+Nick.Currie
+Yeah, we'll just assume so.
+0:22:15.100 --> 0:22:34.620
+Nick.Currie
+I mean that if you, I don't know if this is a direct correlation, but if you go into that easy admin portal that you logged into first about every minute and 1/2 it blanks and refreshes the data. So it might be writing to that database at that same frequency.
+0:22:37.840 --> 0:22:42.440
+Nick.Currie
+I'm sorry if that's kind of just in clinic educated assumption because it totally is.
+0:22:53.950 --> 0:22:58.600
+Speaker 1
+I mean, I guess from a disk space perspective, it's tiny. It's only 15 gig of data.
+0:22:59.150 --> 0:22:59.510
+Nick.Currie
+Mm-hmm.
+0:22:59.460 --> 0:23:2.470
+Speaker 1
+So it's not like it's writing a whole bunch of stuff, but.
+0:23:4.180 --> 0:23:4.450
+Bradley.Sando
+It.
+0:23:3.690 --> 0:23:5.540
+Speaker 1
+Well, I mean, yeah, it gets a little spiky.
+0:23:9.70 --> 0:23:9.490
+Nick.Currie
+Mentioned.
+0:23:7.350 --> 0:23:13.810
+Speaker 1
+You're on me. I mean, you should be able to hopefully go into the portal and see this stuff, but if not.
+0:23:15.190 --> 0:23:17.830
+Speaker 1
+I mean, this is the the database right here.
+0:23:19.710 --> 0:23:21.800
+Speaker 1
+So it's just 100 BTU's.
+0:23:22.560 --> 0:23:23.330
+Speaker 1
+And.
+0:23:29.420 --> 0:23:30.780
+Speaker 1
+That's going on right now.
+0:23:31.920 --> 0:23:32.240
+Nick.Currie
+Wow.
+0:23:40.990 --> 0:23:49.290
+Bradley.Sando
+Well, it it just surprised me that I mean all it's doing is pulling licensing information and user logins and that type of thing why it should be.
+0:23:50.230 --> 0:23:51.540
+Bradley.Sando
+So resource intensive.
+0:23:54.330 --> 0:24:14.460
+Speaker 1
+Well, like I said, that's the we we can get into the queries and I guarantee that if you turn on, you just accept the recommended indexes 9 times out of 10, it's solves all your app performance problems and the issue is the vendor doesn't create those indexes when they configure the database.
+0:24:15.290 --> 0:24:15.940
+Speaker 1
+Ohh.
+0:24:16.760 --> 0:24:19.240
+Speaker 1
+So just is what it is.
+0:24:18.160 --> 0:24:24.90
+Bradley.Sando
+So that might be worth a dropping into your scope here. Neck is just to have a the indexes recreated.
+0:24:27.80 --> 0:24:32.850
+Bradley.Sando
+Of course, this can all change. You know what version 23? That with new brokers and the new server.
+0:24:34.910 --> 0:24:35.600
+Speaker 1
+It'll change.
+0:24:34.860 --> 0:24:37.180
+Bradley.Sando
+It may be it may be different, yeah.
+0:24:38.840 --> 0:24:42.830
+Speaker 1
+I mean, you can get into the query performance insight thing here and it'll tell you.
+0:24:43.780 --> 0:24:54.830
+Speaker 1
+You know what's your? What's your most frequent query? What's consuming all the performance and the time and everything, top five queries and you can let it just optimize for you solve the problem.
+0:24:55.940 --> 0:25:2.250
+Speaker 1
+It's amazing how many products we own that you know they all run a lot better if we just auto optimized.
+0:25:3.340 --> 0:25:3.810
+Nick.Currie
+OK.
+0:25:9.0 --> 0:25:14.90
+Bradley.Sando
+Yeah. And how many problems can be solved just with a with a correct indexes?
+0:25:17.690 --> 0:25:23.50
+Speaker 1
+Yeah, I don't know enough about the schema because you know it's vendor where obviously nobody here probably knows.
+0:25:23.930 --> 0:25:25.700
+Speaker 1
+What in the world they're doing with this thing?
+0:25:28.160 --> 0:25:28.750
+Speaker 1
+But.
+0:25:29.990 --> 0:25:31.380
+Speaker 1
+These are long queries.
+0:25:29.940 --> 0:25:31.550
+Nick.Currie
+I certainly don't know enough about it.
+0:25:32.270 --> 0:25:34.920
+Speaker 1
+Look at the duration. This is like a 3 minute query.
+0:25:38.780 --> 0:25:39.690
+Speaker 1
+Ohh man.
+0:25:40.580 --> 0:25:41.360
+Speaker 1
+That's brutal.
+0:25:40.510 --> 0:25:47.920
+Bradley.Sando
+See, I would. I would expect that if you know we had thousands of servers or something, but we only have this handful of servers and.
+0:25:49.70 --> 0:25:53.740
+Speaker 1
+Now it's just highly unoptimized sequel with seven left Outer joins.
+0:25:57.20 --> 0:26:1.120
+Speaker 1
+That's yeah, outer join. Left outer join. Left outer join? Yeah.
+0:26:3.650 --> 0:26:5.900
+Speaker 1
+Hey, it runs like up Sam go us.
+0:26:7.910 --> 0:26:8.390
+Speaker 1
+Anyway.
+0:26:9.0 --> 0:26:9.810
+Nick.Currie
+OK.
+0:26:10.410 --> 0:26:17.820
+Speaker 1
+Yeah, this this is all pretty trivial to do. You can get one of the Dbas to help you if you don't understand what's going on with the queries, they can explain it to you. But.
+0:26:19.130 --> 0:26:28.740
+Speaker 1
+Yeah, I mean I I don't know if if the vendor would care that we've optimized their database for them, but hey, maybe they've already done this optimization in the new version.
+0:26:29.370 --> 0:26:33.480
+Speaker 1
+Or maybe they just tell everybody you need 8 cores, so it doesn't matter.
+0:26:32.520 --> 0:26:34.140
+Nick.Currie
+Because of this junk.
+0:26:36.480 --> 0:26:37.190
+Nick.Currie
+Well said.
+0:26:38.210 --> 0:26:38.420
+Bradley.Sando
+Well.
+0:26:41.740 --> 0:26:43.550
+Bradley.Sando
+I've got a hard stop here at 4.
+0:26:44.80 --> 0:26:44.360
+Nick.Currie
+Come.
+0:26:45.30 --> 0:26:49.310
+Bradley.Sando
+A John. What we're trying to do is we're gonna try to get this through ARB tomorrow.
+0:26:50.930 --> 0:27:14.20
+Bradley.Sando
+You don't see any issues with the current since we already have those servers already stood up. If we make this our architectural plan, we should be able to to push this through and I don't. Can't imagine we would need any additional changes, but I will find out what the protocols are between the brokers and the open LM server and and get those noted on here prior to that.
+0:27:17.140 --> 0:27:25.430
+Speaker 1
+OK. Well, yeah, I think it all just gets pending whatever Nick decides to do or with the vendor recommends given our situation, you know, but.
+0:27:25.520 --> 0:27:25.760
+Bradley.Sando
+Yeah.
+0:27:24.450 --> 0:27:26.600
+Nick.Currie
+Yeah, I'll call them. I'll call them immediately.
+0:27:27.510 --> 0:27:28.920
+Bradley.Sando
+Let's let's touch base.
+0:27:27.480 --> 0:27:30.750
+Speaker 1
+But you know, there's resources, though. They're ready to go.
+0:27:33.190 --> 0:27:34.890
+Bradley.Sando
+Let's touch base in the morning then, Nick.
+0:27:35.420 --> 0:27:36.70
+Nick.Currie
+Absolutely.
+0:27:36.740 --> 0:27:37.20
+Bradley.Sando
+OK.
+0:27:39.140 --> 0:27:39.430
+Nick.Currie
+OK.
+0:27:44.200 --> 0:27:45.140
+Bradley.Sando
+Anything else?
+0:27:51.700 --> 0:27:52.490
+Nick.Currie
+Think I'm solid.
+0:27:50.450 --> 0:27:54.660
+Bradley.Sando
+All right. Well, thank you all. And you guys have a good afternoon.
+0:27:56.130 --> 0:27:56.680
+James.Oehring
+Thanks fellas.
+0:27:55.720 --> 0:27:56.770
+Nick.Currie
+Indeed y'all as well.
+0:27:57.570 --> 0:27:59.310
+Bradley.Sando
+Alright, take care. Bye.
