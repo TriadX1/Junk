@@ -1,798 +1,1102 @@
-0:0:0.0 --> 0:0:0.420
-Bradley.Sando
-Here.
-0:0:10.910 --> 0:0:15.350
-Bradley.Sando
-Some reason everything closed on me. Give me just a second while I get that back up here.
-0:0:20.680 --> 0:0:27.310
-Bradley.Sando
-There we go. Alright, so just a quick recap on this, what the project is is open LM.
-0:0:28.450 --> 0:0:33.310
-Bradley.Sando
-Needs to be upgraded. It is currently running on version I believe 5.4.
-0:0:34.730 --> 0:0:36.830
-Bradley.Sando
-And it will have to go through a couple of steps.
-0:0:37.890 --> 0:1:1.510
-Bradley.Sando
-It will need to go to the 5.6 version which updates the database schemas and brings them up to the current database format. Then that basically will prepare it for the version 23 upgrade. So then once the 5.6 is done, we can go to the to the version 23. I know there were some updated.
-0:1:3.50 --> 0:1:24.870
-Bradley.Sando
-Server requirements just for the number. I think the number of cores they and the amount of memory needs to be updated. But John I I think you know from your conversation earlier on this and looking at what that server is, I'm not certain that that that we need to update it from what it is right now.
-0:1:26.320 --> 0:1:40.340
-Bradley.Sando
-It does add a couple of instances of SQL databases, but those look that they should be able to run on the same SQL Server, so that shouldn't be an issue. It's not like we have to stand up another SQL Server for those.
-0:1:43.230 --> 0:1:58.210
-Bradley.Sando
-Also, as far as the applications that the open LM server is connecting to to pull down the licensing information, the scope of that is not changing from the current state. Is that correct Nick?
-0:2:0.500 --> 0:2:1.810
-Nick.Currie
-Our our new.
-0:2:2.790 --> 0:2:6.580
-Nick.Currie
-Licensing agreement does allow us an unlimited.
-0:2:7.260 --> 0:2:20.110
-Nick.Currie
-Number of vendor daemons. So we will absolutely be looking to connect it to as many of the keyword engineering or the engineering side license servers as possible.
-0:2:29.470 --> 0:2:30.170
-Nick.Currie
-Absolutely.
-0:2:21.560 --> 0:2:40.690
-Bradley.Sando
-OK, so, but uh, what I have called out here I believe is the same as what our current state is. And as far as this project, I what I would recommend is that we stick with these get get these all pulling on version 23 and then you know then we can start probably adding additional ones after the upgrade.
-0:2:44.880 --> 0:2:45.450
-Bradley.Sando
+Transcript
+May 25, 2023, 1:37PM
+
+Travis.Coker   0:03
+We are live OK, there we go.
+
+Travis.Coker started transcription
+
+Travis.Coker   0:09
+Purpose of this call is to kind of give benchmark information between using the core API through Caleb Kushner's Integrated Services Department or taking a look at the Microsoft in a connector and trying to introduce that as my teams primary method of connecting within a documentation or not data.
+But solutions architecture wanted this call put together and wanted to understand what you know, what are the differences and similarities between core API and then the in eight connector. And so I've got Aaron, I've got Kayla. I've got Melissa here to help kind of guide this a little bit and I'm gonna switch this over to Kayla. You are kind of the person I'm wanting to hear some data from in regards to this topic. So you have the floor.
+But you're muted, so it's not going to sound very well.
+
+Kayla.Kirzinger   1:05
+I know my row is getting a little head. They're having fun.
+That's how I know it's fine and keep having fun.
+So I wanna show you guys rather than tell you guys.
+I figured that would be easier.
+
+Travis.Coker   1:19
+Even better.
+
+Kayla.Kirzinger   1:22
+And so, Aaron, obviously since you're asking for the tenant, you've used the innate API portal.
+Or are using or starting to use.
+
+Aaron.Knox   1:30
+Yeah, but I don't know. I don't know what I'm doing.
+
+Kayla.Kirzinger   1:33
+That's fair.
+OK, so I am going to share my screen.
+Umm, so ironically, these are actually both the same portal well created in the same tool because both and and eight are.
+Microsoft Azure shops so but our tool is just the more new version of what they have.
+So I think they're on their way to doing this at as well. So this is Corey API, it's sometimes called Enterprise API doesn't really matter. And then this one is Inates API portal.
+So these are both available to you. I know you already. Like I said, use the API one for an 8 a little bit, but this one is available as well.
+Umm, it is controlled by AD groups. So sometimes I find if I'm working with like non core KTG people you might not have immediate access, but it's remedied very easily by adding an ad group. So don't worry about it.
+So I guess before I jump into like looking at them, the overall difference is obviously the innate API is in front of all specifically innate data and so sourced out of an 8 being pulled out of an 8 et cetera, whereas query API really it's, I don't even wanna say SAP because it's that's probably a misdirection. The idea is that we're servicing like general data that KIEWIT uses.
+In like a modelled format. So things that we use commonly over and over and over again here, so like employees, equipment, projects, districts.
+Things like that it also is there to provide a door in and out of our back end systems for creating data in a Safeway. So like an example would be we have a way that you can create an invoice or a timesheet.
+That's like a safe and agreed upon manner so that if we got a new app that needed to create a timesheet, they can hook into this and then that way we know that's going where it needs to go. So it's kind of both sides of that coin.
+Uh surfacing data in a modeled way, but then also safe creation of data of a lot of it is SAP because of a lot of our data lives in SAP, but not all of it is SAP in necessarily.
+And so I don't wanna put it out that way. The Anna one, quite frankly, is about the same thing, but for an aid, right? So a lot of different entities that are used in an 8.
+Umm account codes, plans components um even their core master data entities so employees and projects. However of course in that case you're sourcing it from innate, not from our source of truth. So in cases like that, it's probably not the right choice, but I think in general the answer here is for you guys is use the source of truth when possible, right? And if innate is the source of truth for that data excellent? The Innate API is a great choice.
+If SAP or resource planner or whatever TG tool or Kiewit tool is the source of truth, use Core API if it's there.
+
+Travis.Coker   4:51
+So with. With that being said, because.
+
+Kayla.Kirzinger   4:51
+Umm.
+
+Travis.Coker   4:55
+The innate.
+The innate data flows to ODS and EDW. If I understand the whole chain correctly, it's just about ohh some of it not.
+
+Kayla.Kirzinger   5:05
+Some of it.
+Well, so OK, this is an opportunity. Yeah. This is an opportunity to jump into here for realsies. So there's several APIs in here.
+
+Aaron.Knox   5:09
+Yeah, can can you elaborate on that, Kayla? Yeah.
+Yeah.
+
+Kayla.Kirzinger   5:19
+The Integrations API is like a tactical API, so that's the API that we use to talk to in eight for the actual pieces of data that send back and forth from our systems.
+It's also closer to Cory API in the sense that the data that it does return so not the posts and puts, but the data that it does return is closer to like a modeled version of that data, rather than like a 100,000 field reporting view of that data. So like account codes is a good example. I mean this is pretty verbose regardless, but you're not getting, say, like a dimensional view over time of the account called through this, so you're getting master data here.
+The rest of these post endpoints you can see it's majority post on this one is truly how we communicate with an 8. So when we're creating projects, employees, equipment.
+Whatever else thinks we create in an 8, these are the endpoints that we hit.
+But I would say that the on the converse, the gets are nice. If I was feeding an app, I would probably use these.
+Even this one right like this is teeny tiny for countries.
+Now the other ones we have here, so these three, these are reporting API, they are like night on Table Copy API. So they'll pull back like a really verbose data set that's pretty close to how the data like the literal data in innate is. And these are the ones that we copy over into ODS EDW.
+
+Aaron.Knox   6:55
+And what what's that schedule? What's that copy schedule?
+
+Kayla.Kirzinger   6:55
+So you're seeing.
+Umm, so it's changed over time. We used to do it daily, but now we're actually pulling from a georeplicated server that in a created. So it's quasi real time I believe. But with that said, there's whatever latency exists on the innate side between their actual server and the georep.
+I don't know what that is, but the way we're copying it from the georeplicated server is quasi real time.
+
+Aaron.Knox   7:32
+OK.
+
+Kayla.Kirzinger   7:34
+However, these so just to reiterate, these integrations API are are real time. Nothing's really real time, but they're pulling from like the actual data.
+
+Travis.Coker   7:45
+O When we're saying quasi real time we're we're saying something like.
+Moment of Pull request plus or minus like 20 minutes or like 2 hours or.
+
+Kayla.Kirzinger   7:53
+Well, the recording ones.
+The reporting ones they have to clone into the Georeplicated server and I'm not really sure what schedule and AIDS cloning into that. I don't think it's like daily. I think it's probably like hourly or something or you know, I don't know for sure, but.
+Depending on your use case, I would really recommend trying to use the integrations API if the data you need is available. It's much more lightweight. You're not looking at getting something that has 7 billion fields and you're gonna need to pull in 17 different ways to try and get all of the data you need. Like it's a list of account codes or it's a list of countries. So if it possibly would get it here.
+Umm, I'm not really sure in terms of their connector that they've built for the power platform. I have no idea which of these is exposed, I've only really ever dealt with the like actual API.
+
+Aaron.Knox   8:49
+Yeah, you're right. They haven't exposed everything and in their API, so we'll just have to sort through that.
+
+Kayla.Kirzinger   8:55
+Yeah. And then are you familiar with like making calls in here?
+
+Aaron.Knox   9:00
+Yeah, you know where you click on try it.
+
+Kayla.Kirzinger   9:04
+Yep, the one suggestion I would have that I like to do, it's just like a personal suggestion is I like to do like a top ten in here because it's kind of a stinker.
+
+Aaron.Knox   9:04
+But but.
+Yeah.
+
+Kayla.Kirzinger   9:15
+And so that way you can just see a small set of the data without needing a large one. You can also get pretty creative with the filter. I suggest like trying it if you need it, like try different things and if you're not familiar with Odata syntax for any reason I can help there.
+
+Aaron.Knox   9:20
+Sure.
+No, no, no, I I am.
+
+Kayla.Kirzinger   9:32
+Cool.
+
+Aaron.Knox   9:33
+But but this this triad and then all all the prefixes, the subscription keys, that's kind of where I'm.
+
+Kayla.Kirzinger   9:40
+Yeah.
+
+Aaron.Knox   9:41
+You know, because it logs me in.
+
+Kayla.Kirzinger   9:44
+Umm.
+
+Aaron.Knox   9:45
+And then like and then it puts the subscription key and then it actually puts it in the bottom.
+
+Kayla.Kirzinger   9:50
+Yep.
+
+Aaron.Knox   9:51
+Uh, but every time I run stuff, either I get a air or I don't get any information. So.
+
+Kayla.Kirzinger   9:56
+Here's the trick I think. Perhaps this is fun, so I'm gonna do top 10.
+I don't remember what prefix were on this is it's a real, UM, real game. I know I don't. I already don't remember.
+
+Aaron.Knox   10:07
+You you e-mail me those. Yeah. And I know that's that's a moving target. Yeah.
+
+Kayla.Kirzinger   10:13
+I think it's 234 is the.
+I just also repointed all our interfaces on these so you'd think I would remember.
+
+Aaron.Knox   10:17
+And then there's.
+But but Travis, this is part of the challenge because that that changes.
+
+Kayla.Kirzinger   10:26
+It does.
+
+Aaron.Knox   10:27
+But, but that's just that's just a test or dev right? Production won't ever change, so OK.
+
+Kayla.Kirzinger   10:31
+Yes. Yeah.
+It does not. OK, so you have to do this little auth drop down, right? I'm sure you know.
+
+Aaron.Knox   10:39
+Yes. Yeah. And and and and that seems to work.
+
+Kayla.Kirzinger   10:41
+Now here's the trickery. So you probably think that this is an empty response. It's not. You have to grab what they're passing in the location header here.
+
+Aaron.Knox   10:54
+They are that you have but.
+
+Kayla.Kirzinger   10:54
+Drop it into another browser window.
+
+Aaron.Knox   10:56
+Sure to to to see that. But see, I'm not even getting that either. I get a access denied or an error.
+
+Kayla.Kirzinger   11:03
+OK. Then in that case, let me know when you're trying it. It may actually be that you don't have access to the tenant at all.
+And in the so I'm not gonna go down the auth hole here because it's gonna be the rest of our meeting in the particular way that the portal authenticates. It does use your user context in the way that you authenticate when you're doing this programmatically for whatever you're gonna end up coding here. You can make it not use your user context, so don't worry about that in the long term. But in order to use the portal, you do have to be a user. So.
+
+Aaron.Knox   11:11
+Like.
+Yeah.
+OK.
+Gotcha.
+
+Travis.Coker   11:35
+So real quick here. If would it make any difference if I've already laid the groundwork with the in a?
+Product owners and they've told me that both.
+
+Kayla.Kirzinger   11:44
+I'll just make you a user. I don't care.
+
+Travis.Coker   11:46
+Aaron, Aaron, and.
+Can have TST O1 access and they have the highest level access within that environment.
+
+Kayla.Kirzinger   11:55
+I mean, I would have to see what you're getting back, but I'll just, I I couldn't be in here too. It's fine.
+
+Travis.Coker   12:02
+I don't know if that statement is even applicable to what you're talking about, because some of this is over my head.
+
+Kayla.Kirzinger   12:07
+Look at you. I think you're in here several times. If anything, this is the love Lee experience of innate. Look at you. Yeah, we got several of you here.
+
+Aaron.Knox   12:13
+See it, it's.
+Well, there's junior. That's that's a new Knox. That's not me.
+
+Kayla.Kirzinger   12:19
+Uh.
+
+Aaron.Knox   12:21
+I know.
+
+Kayla.Kirzinger   12:25
+Oh, we don't like that date.
+How about December 29th? OK, yeah. You don't have rules. Yeah.
+I'm just gonna make you super account admin at the very top level. Congratulations.
+
+Aaron.Knox   12:41
+But this is still the that the test.
+
+Kayla.Kirzinger   12:43
+It's 234. I'm not. I probably could give you access. I'm proud, but I don't like to involve myself with that kind of stuff. So.
+
+Aaron.Knox   12:46
+OK.
+That's that. I mean, I think that will be the next step once we work through this, but.
+
+Kayla.Kirzinger   12:53
+Yeah. So give this well, so you like I said, ultimately, so like I'll just really do a quick dalliance in here.
+Umm.
+And eight and eight and eight.
+Ohh my whole computer is having a moment.
+
+Aaron.Knox   13:09
+What's what's insomnia? What is this?
+
+Kayla.Kirzinger   13:10
+Umm.
+It's just the rest. The rest client I use.
+
+Aaron.Knox   13:14
+Ohh OK, that's cool.
+
+Kayla.Kirzinger   13:16
+Umm, so you can see here this is me grabbing a token and it this token has absolutely nothing to do with me since it's client credentials. So you can implement this way ultimately either through the connector or whatever, you won't need access in prod to do this.
+Umm. OK. So then really quick just so you have it back to core API, so you can make your own decisions which is really what this portal is for is the both of them. It's to enable you to have all the information to make your own calls here.
+Uh, so I always have to give this disclaimer cause this is dumb. Also don't get super excited, but if you guys have feedback here for power platform I made this so long ago I made this ages ago and no one cared.
+
+Aaron.Knox   13:57
+I saw that.
+I saw that, yeah.
+
+Kayla.Kirzinger   14:01
+Uh, so yeah, if you guys have feedback for.
+
+Aaron.Knox   14:02
+I do. I do. I thought it was great. Kayla, keep up the good work.
+
+Travis.Coker   14:06
+We will totally put some feedback on this.
+
+Kayla.Kirzinger   14:08
+This I would love it. I never ended up making the custom connector for Power BI because I got confused. But I did make a power apps custom connector so.
+
+Aaron.Knox   14:09
+Hell yes.
+We don't care about power guy.
+You did and I and I used it. It's it. It works great.
+
+Kayla.Kirzinger   14:19
+Yay.
+Uh, so anyways, yeah, if you have feedback for that page, I would love to hear it, but there's a small bug here. I swear it's Microsoft when you hit this sign in button, so prior to signing in, just like the innate portal, you can't see API when you hit the sign in button, it does the same thing that the token thing in the innate one does it wing wings you back to the home page? I don't know, man. It's it's silly. Just go back in.
+And when you go back in the API are available.
+
+Aaron.Knox   14:51
+Cool.
+
+Kayla.Kirzinger   14:51
+I have way more than you guys would have. You're probably just gonna see core API.
+
+Aaron.Knox   14:55
+Yeah.
+
+Kayla.Kirzinger   14:55
+Umm, they're sorted by. I tried to sort them by tag. This was an interesting choice.
+There are multiple pages.
+
+Aaron.Knox   15:02
+Oh well.
+I I do see like the one and then just core that API. So OK.
+
+Kayla.Kirzinger   15:07
+That's fine, I would use V1. It's the newer 1, unsurprisingly.
+
+Aaron.Knox   15:10
 Yeah, yeah.
-0:2:41.120 --> 0:2:50.50
-Nick.Currie
-Yeah, agreed. I probably got a little too ahead of myself on that one. That is definitely something future probably hanging out in that same category as the power BI reporting.
-0:3:0.970 --> 0:3:1.220
-Nick.Currie
+
+Kayla.Kirzinger   15:13
+But basically in here it's your playground, so you can try them. You can check them, you can use them if you want to use them. Whatever.
+
+Aaron.Knox   15:16
+Yep.
+Yeah.
+Yeah, and you're right, this interface has changed. It looks like you updated this.
+Whatever from from Azure.
+
+Kayla.Kirzinger   15:29
+Yeah, they put out this like new developer portal.
+
+Aaron.Knox   15:30
+It's like this. This new version, yeah.
+
+Kayla.Kirzinger   15:33
+It's fine. I like it. I'm like, obviously not a UX UI designer.
+So, but it's it's more obviously it gives you way more than like what we had here, which was nothing.
+
+Aaron.Knox   15:40
+It worked and.
+Yes.
+
+Kayla.Kirzinger   15:47
+Umm, so that's nice. But yeah, I encourage you to try these. I would say things like where we really get the dividing line is like don't get your list of employees from an 8, right? Like if you needed them, there's absolutely no reason to do that.
+
+Aaron.Knox   15:48
+Yeah.
+Sure.
+
+Kayla.Kirzinger   16:03
+You know, even cost centers projects are legal entities, those kinds of things. They're not ruminate, so don't grab them from there if you're using them. But otherwise, things that are ultimately sourced and innate. This is really the right place to go.
+
+Aaron.Knox   16:17
+Like the town codes.
+
+Travis.Coker   16:18
+So.
+So yeah, let's talk about that real quick, Aaron. So we're thinking use cases for account codes, we're thinking use cases for equipment codes.
+
+Kayla.Kirzinger   16:20
+Umm yeah, that's the right source.
+
+Travis.Coker   16:27
+We're thinking of use cases for right now.
+
+Kayla.Kirzinger   16:31
+Equipment. I would go here. We have super verbose equipment information.
+
+Travis.Coker   16:33
+OK.
 Umm.
-0:2:50.440 --> 0:3:2.890
-Bradley.Sando
-Right. Yeah, I put that on here too, just because we know that at some point that that will be a, a, A probably requirement, but it's not in scope for right now. One other piece.
-0:3:4.790 --> 0:3:6.60
-Bradley.Sando
-Let me see if I can.
-0:3:8.530 --> 0:3:15.670
-Bradley.Sando
-A touch on real quick, I know that the new version does support directory sync and SSO.
-0:3:17.250 --> 0:3:24.420
-Bradley.Sando
-I'm not sure if that's a requirement that we would implement at this point, but it might be something that we would want to consider.
-0:3:25.130 --> 0:3:29.880
-Nick.Currie
-Absolutely down the road, probably same bucket as the additional servers and the power BI for sure.
-0:3:32.70 --> 0:3:48.790
-Bradley.Sando
-OK. And yeah, then I guess one other comment on it. Quick was the the licensing, the new licensing does support unlimited like licenses which then like you said we could add as many additional servers we wanna monitor at that point.
-0:3:49.50 --> 0:3:49.460
-Nick.Currie
+
+Kayla.Kirzinger   16:36
+Umm. If there's something you need to like, ask me for equipment, let me know. But this is for sure for sure the right source of truth for equipment information.
+
+Travis.Coker   16:47
 Umm.
-0:3:49.930 --> 0:3:52.940
-Bradley.Sando
-So I guess my question for John on that is.
-0:3:54.680 --> 0:4:2.590
-Bradley.Sando
-All of these servers that the open LM is currently connecting to. I know on your landscape diagram you do have those called out.
-0:4:4.840 --> 0:4:10.980
-Bradley.Sando
-And I'm I'm assuming that when the process that they're gonna wanna go through is when they want to add a new.
-0:4:11.530 --> 0:4:17.430
-Bradley.Sando
-Ohm server then that they're going to want to to work through you again so that we can get those.
-0:4:17.510 --> 0:4:21.310
-Bradley.Sando
-Uh, new ones added to the landscape diagram as well.
-0:4:22.470 --> 0:4:28.380
-Speaker 1
-So can you pull up Chrome real quick and go to any of the current open LM servers for your diagram?
-0:4:31.390 --> 0:4:32.530
-Bradley.Sando
-No. Let me see.
-0:4:42.850 --> 0:4:45.300
-Bradley.Sando
-So you want me to browse to?
-0:4:47.140 --> 0:4:50.390
-Speaker 1
-Sure. KPE DOL, MAW, P001.
-0:4:50.970 --> 0:4:51.820
-Bradley.Sando
-This one right here.
-0:4:51.320 --> 0:4:51.870
-Speaker 1
-Go to there.
-0:4:52.720 --> 0:4:53.10
-Bradley.Sando
-OK.
-0:4:52.980 --> 0:4:53.240
-Speaker 1
+And try Aaron. I'm trying to think of other things related to the, the the idea of process the this get the schedule impact cause that's hitting.
+
+Kayla.Kirzinger   16:50
+And we.
+
+Travis.Coker   17:00
+In eight control.
+I think and.
+I don't know all of the get actions in that area.
+
+Kayla.Kirzinger   17:10
+Yeah. So control would depend. UM.
+You. You're gonna see things named cost item.
+In in eight rather than UM, WBS, so be on the lookout for that.
+
+Travis.Coker   17:22
+Oh, no, that's good. That's good, because we do need to call WBS codes. So that would be get.
+
+Aaron.Knox   17:26
 Yeah.
-0:5:14.390 --> 0:5:14.900
-Bradley.Sando
-Looks.
-0:5:14.30 --> 0:5:17.860
-Nick.Currie
-Pay the link I sent in chat might be what you're actually looking for.
-0:5:18.610 --> 0:5:22.770
-Speaker 1
-Yeah, I don't. I don't think what you have on diagram is how it works at all. So.
-0:5:28.920 --> 0:5:31.150
-Bradley.Sando
-See the chat here.
-0:5:50.90 --> 0:5:51.20
-Nick.Currie
-Admin admin.
-0:5:52.690 --> 0:5:54.130
-Nick.Currie
-If you want to get in right.
-0:6:24.50 --> 0:6:32.520
-Nick.Currie
-And if you're if what we're looking for is just what's connected to it already, you can just hit the license servers thing down in the bottom there.
-0:6:47.400 --> 0:6:50.440
-Nick.Currie
-Is this what we're after? Are we looking to correct?
-0:6:51.140 --> 0:7:2.10
-Nick.Currie
-That key would admin line into the open LM server where it right now says HTTPS and port. What was that 443?
-0:7:1.500 --> 0:7:4.80
-Bradley.Sando
-Or 43 which should be 17.
-0:7:2.980 --> 0:7:6.280
-Nick.Currie
-Where it should just be in HTTP in the.
-0:7:7.390 --> 0:7:8.460
-Nick.Currie
-7019.
-0:7:9.360 --> 0:7:9.770
-Bradley.Sando
-Team.
-0:7:11.420 --> 0:7:12.370
-Speaker 1
-Their work around.
-0:7:17.600 --> 0:7:20.470
-Speaker 1
-Yeah, it's not HTTPS, there's no encryption there.
-0:7:22.510 --> 0:7:34.10
-Speaker 1
-OK, so all those unlabeled lines there. The reason why the landscape diagram just has an orange line with question Mark question Mark question Mark is because I don't know what that's actually talking to or how.
-0:7:34.870 --> 0:7:35.360
-Speaker 1
-Uh.
-0:7:39.230 --> 0:7:44.710
-Bradley.Sando
-So the protocol that it's using to talk to those servers we we don't know what that is or what the port is.
-0:7:46.530 --> 0:7:52.110
-Speaker 1
-I don't. I mean how, how would it connect to SAP? What SAP system is it actually connecting to?
-0:8:12.270 --> 0:8:12.810
-Speaker 1
-OK.
-0:7:56.90 --> 0:8:14.420
-Nick.Currie
-We're calling out, OK, that SAP should probably be designated as computers and structures. SAP is a computers and structures program, SAP 2000 structural analysis. It definitely not connecting to. Yeah.
-0:8:15.250 --> 0:8:15.670
-Nick.Currie
-That.
-0:8:15.660 --> 0:8:16.10
-Speaker 1
-Yeah.
-0:8:16.390 --> 0:8:18.550
-Nick.Currie
-The the more well known SAP.
-0:8:18.690 --> 0:8:19.120
-Bradley.Sando
-Yeah.
-0:8:19.280 --> 0:8:19.840
-Speaker 1
-Yeah.
-0:8:21.490 --> 0:8:23.710
-Bradley.Sando
-Let me what's a better way to label that?
-0:8:21.390 --> 0:8:23.980
-Speaker 1
-So there there's a lot of detail missing from there.
-0:8:27.720 --> 0:8:28.210
-Nick.Currie
-Yeah.
-0:8:31.610 --> 0:8:31.880
-Bradley.Sando
-OK.
-0:8:31.780 --> 0:8:32.550
-Nick.Currie
-Right, but that.
-0:8:25.540 --> 0:8:32.780
-Speaker 1
-Step 2000. That's actually what it's called in the ***. That's the real name of the product, which is unfortunate.
-0:8:33.650 --> 0:9:5.60
-Nick.Currie
-Yeah, yeah, it is. That server does host licenses for more applications than SA than SAP 2000. It's the entire computers and structures applications suite, so I if you want to call it SAP 2000, great. I know what you're talking about. I think anyone on the engineering side would know what you're talking about. But if you're looking to be specific down to vendor and how that server actually works, it would probably be better to call it computers and structures.
-0:9:5.350 --> 0:9:6.320
-Nick.Currie
-Licensing server.
-0:9:8.740 --> 0:9:20.50
-Speaker 1
-So when this is talking to those remote license servers, is it actually talking directly to the license service process, or is that the agent component that it's talking to on each of those servers?
-0:9:20.450 --> 0:9:37.300
-Nick.Currie
-So there is a a broker and a vendor daemon. The broker is what lives on the license server and it's that that piece that talks back to open LM to the Open LM main server and passes the the data.
-0:9:39.180 --> 0:9:50.560
-Nick.Currie
-In. Yeah, in. In all honesty, I do not know the protocol nor the port over over which that data is transmitted. It's. I'm sure I could find that out.
-0:9:51.740 --> 0:9:58.690
-Speaker 1
-Well, I mean, just directionality would be helpful because I'm trying to figure out is this a case of the open LM server going out and pulling?
-0:9:59.380 --> 0:10:3.610
-Speaker 1
-All those brokers or to the brokers just phone home to this thing failed.
-0:10:5.80 --> 0:10:5.680
-Nick.Currie
-Umm.
-0:10:11.570 --> 0:10:12.920
-Nick.Currie
-Question to discover.
-0:10:14.560 --> 0:10:16.200
-Speaker 1
-Oh, well. Well, let me.
-0:10:17.400 --> 0:10:18.210
-Speaker 1
-Skilled.
-0:10:14.580 --> 0:10:34.410
-Bradley.Sando
-Yeah, I believe I read that in the documentation that it actually reaches out to the broker and requests that information. And actually we did specify that in our context to the each of those brokers will also need to be updated as part of this project to bring them up to the current version of so that they can.
-0:10:35.550 --> 0:10:36.580
-Bradley.Sando
-So they have the right data.
-0:10:37.710 --> 0:10:38.80
-Speaker 1
-13.
-0:10:39.180 --> 0:10:43.330
-Speaker 1
-Yeah. So back in 2020, I think we built the new.
-0:10:44.170 --> 0:10:47.770
-Speaker 1
-2019 server up in Ashley thing here and.
-0:10:48.480 --> 0:10:58.600
-Speaker 1
-Didn't really know what was talking to it. The old one. The on Prem one was actually I think down in Lenexa at the time and I haven't checked recently and might still be down there.
-0:10:59.40 --> 0:10:59.400
-Speaker 1
-Uh.
-0:11:3.420 --> 0:11:4.230
-Nick.Currie
-Umm.
-0:11:0.550 --> 0:11:9.780
-Speaker 1
-Real quick. Yeah, that's the animal nexa. So that's a a legacy one that was tagged as decom, but it never got cleaned up after the last round of changes.
-0:11:10.240 --> 0:11:11.950
-Nick.Currie
-Ohh and it's still in use.
-0:11:12.860 --> 0:11:35.490
-Speaker 1
-I know, I know. Yeah. I was looking at utilization on both of them. The interesting thing is the majority of the utilization isn't on the app server at all. The app server is almost, you know, bored. It bounces from 5 to 15% used the majority of the banging is actually on that database that's hosted up in Paas and that thing's grown from like an S0 to an S3. So it's.
-0:11:37.0 --> 0:11:41.490
-Speaker 1
-I don't know roughly half what would be a sequel server. That's still paas.
-0:11:42.70 --> 0:11:50.890
-Speaker 1
-Ohm and I guess what I'm trying to figure out is we have the 2019 server already built up here. Is this just an in place software upgrade?
-0:11:51.550 --> 0:12:1.340
-Speaker 1
-For the open LM server on here and then the various agents out on those other machines. Or does this actually require a new 2019 server?
-0:12:2.70 --> 0:12:3.50
-Speaker 1
-And database.
-0:12:5.510 --> 0:12:5.890
-Speaker 1
-That.
-0:12:4.690 --> 0:12:8.580
-Nick.Currie
-My understanding is it would be an in place upgrade.
-0:12:10.580 --> 0:12:10.870
-Nick.Currie
-But.
-0:12:11.560 --> 0:12:18.160
-Nick.Currie
-I I honestly don't think anyone with anything was ever set up for the open LM service.
-0:12:18.840 --> 0:12:20.830
-Nick.Currie
-On that that Azure box.
-0:12:25.170 --> 0:12:25.930
-Speaker 1
-That's interesting.
-0:12:26.890 --> 0:12:27.630
-Speaker 1
-But me?
-0:12:28.740 --> 0:12:31.760
-Nick.Currie
-It is interesting. Unfortunately, it's not too surprising.
-0:12:54.190 --> 0:12:56.220
-Nick.Currie
-Zero administration.
-0:12:33.450 --> 0:12:59.870
-Speaker 1
-Yeah, that's about 1/3 of the servers that people requested back when Carrie was here. So there's a lot of unused stuff out there. Like we're finding that all over the place with the the smart plant job runners where they were created for individual projects and the project either went away or never took off. And so that server has been sitting there with stranded capacity. Meanwhile, the guys down in Houston are hooting and hollering because they don't have any capacity. They're all full.
-0:13:1.200 --> 0:13:1.600
-Nick.Currie
-Geez.
-0:13:0.530 --> 0:13:11.130
-Speaker 1
-So one problem or another anyway, so the but, but the database here is used. This database is very busy and I'm assuming the on Prem server is currently hitting it.
-0:13:11.680 --> 0:13:13.700
-Nick.Currie
-And that's that is my understanding, yeah.
-0:13:14.30 --> 0:13:15.620
-Speaker 1
-OK, OK.
-0:13:21.230 --> 0:13:21.630
-Speaker 1
-Yeah.
-0:13:14.370 --> 0:13:22.510
-Nick.Currie
-And and that that does make sense that a lot of the processing, a lot of the the work is being done on that that database side.
-0:13:22.720 --> 0:13:23.0
-Speaker 1
-Yeah.
-0:13:24.820 --> 0:13:29.790
-Nick.Currie
-And you know it, it growing exponentially and without rain is.
-0:13:35.190 --> 0:13:36.430
-Speaker 1
-I don't know the right now and I'm fine.
-0:13:31.80 --> 0:13:39.310
-Nick.Currie
-Well, it's it's our fault on the engineering side because nobody managed the open LM tool to even start cleaning up the database so.
-0:13:39.820 --> 0:13:48.230
-Bradley.Sando
-Right. And Nick, I think you'd actually called that out that as part of this project, that was part of the scope was actually doing some of that database cleanup, correct?
-0:13:47.930 --> 0:13:59.520
-Nick.Currie
-Mm-hmm. Yep. Open LM has a, you know, back out to database tool and then a clean up tool where we can just specify a date and everything prior to that, it just.
-0:14:0.770 --> 0:14:1.150
-Nick.Currie
-Nukes.
-0:14:4.950 --> 0:14:10.110
-Speaker 1
-OK. And you can do the in place schema upgrade on that database, so you don't need a a different database for that.
-0:14:11.350 --> 0:14:13.290
-Nick.Currie
-No, at least according to open LM.
-0:14:14.540 --> 0:14:15.430
-Nick.Currie
-As like.
-0:14:16.70 --> 0:14:22.220
-Nick.Currie
-Just like Bradley said, the first upgrade from version 5.4 to 5.6.
-0:14:24.360 --> 0:14:26.750
-Nick.Currie
-Handles, you know, upgrading.
-0:14:27.490 --> 0:14:37.940
-Nick.Currie
-The the component and service structure for open LM and like makes open LM talk out to the database and restructure the schema.
-0:14:38.960 --> 0:14:40.120
-Nick.Currie
-So that it's ready to go.
-0:14:46.300 --> 0:14:46.780
-Nick.Currie
-Yeah.
-0:14:41.370 --> 0:14:53.210
-Speaker 1
-OK. Well, I mean, it sounds like there's nothing new required in Azure and when when it's all said and done, James or someone can put in that decom ticket for the old KPD cluster box on Prem.
-0:14:53.930 --> 0:14:54.420
-Speaker 1
-I.
-0:14:53.800 --> 0:14:57.0
-Nick.Currie
-Yeah. So my well, so now my question is I wonder.
-0:14:57.780 --> 0:15:5.40
-Nick.Currie
-If I should go back to open LM and ask that, well, first I should check this Azure box and be sure that there's nothing running on it.
-0:15:5.880 --> 0:15:10.680
-Nick.Currie
-Because if there's nothing running on that Azure box that was built for the, you know.
-0:15:11.350 --> 0:15:13.280
-Nick.Currie
-To bring us to modern times.
-0:15:14.670 --> 0:15:19.560
-Nick.Currie
-Have to wonder if we're even running down. Like, why are we updating?
-0:15:20.520 --> 0:15:22.550
-Nick.Currie
-What we've got instead of.
-0:15:23.820 --> 0:15:24.840
-Nick.Currie
-Building something.
-0:15:26.730 --> 0:15:29.60
-Nick.Currie
-Been the on the new box where it should be.
-0:15:32.830 --> 0:15:33.900
-Nick.Currie
-Get in that thing.
-0:15:33.350 --> 0:15:48.930
-Speaker 1
-I guess originally the the utilization was so low on this product, there was no point in building a sequel server and actually paying the SQL license and all that stuff. And if you know, if we need to revisit that and this thing really is gonna.
-0:15:49.570 --> 0:16:0.320
-Speaker 1
-Continue to grow on the database, then maybe we can change the design, but you know it looks like right now you should be able to try to do whatever you want to do and.
-0:16:0.720 --> 0:16:1.260
-Nick.Currie
-OK.
-0:16:1.380 --> 0:16:4.90
-Speaker 1
-You know, if it doesn't work, we can back up and change.
-0:16:4.940 --> 0:16:5.930
-Speaker 1
-Change direction.
-0:16:7.890 --> 0:16:8.340
-Nick.Currie
-Yeah.
-0:16:13.310 --> 0:16:28.540
-Bradley.Sando
-Yeah, I'm. I'm curious too. Like, you know, you said that the data that's currently sitting in that database is goes all the way back to like 2010, correct? So you know, cleaning that up up to you 'cause you, you would basically remove everything prior to 2019.
-0:16:29.570 --> 0:16:34.390
-Bradley.Sando
-Umm, so that may end up freeing up a lot of resources on that database server.
-0:16:36.310 --> 0:16:37.920
-Nick.Currie
-Not expect it to as well.
-0:16:45.490 --> 0:16:48.510
-Nick.Currie
-Yeah, this Azure open LM server is just.
-0:16:49.710 --> 0:16:51.280
-Nick.Currie
-It it's just sitting there running.
-0:16:53.710 --> 0:16:58.920
-Nick.Currie
-There's there's nothing installed as far as open LM, no services running on it.
-0:16:59.760 --> 0:17:1.610
-Nick.Currie
-That I recognize from open LM.
-0:17:4.460 --> 0:17:8.890
-Speaker 1
-It sounds well, yeah. Like you said, that would be a completely standard.
-0:17:11.130 --> 0:17:11.720
-Nick.Currie
-Yeah.
-0:17:13.440 --> 0:17:13.950
-Nick.Currie
-Umm.
-0:17:15.350 --> 0:17:17.160
-Nick.Currie
-Alright, so I should ask.
-0:17:23.200 --> 0:17:25.280
-Nick.Currie
-But regardless of where.
-0:17:25.970 --> 0:17:31.420
-Nick.Currie
-Where this this ends up if we do the end place in place, upgrade on the on Prem server.
-0:17:32.190 --> 0:17:33.150
-Nick.Currie
-Or if we.
-0:17:35.150 --> 0:17:39.20
-Nick.Currie
-You know, just install everything fresh new on the the Azure box.
-0:17:42.210 --> 0:17:46.0
-Nick.Currie
-I mean, the landscape diagram doesn't change overly much, does it?
-0:17:52.810 --> 0:17:53.600
-Nick.Currie
-Absolutely.
-0:17:56.300 --> 0:17:57.490
-Nick.Currie
-Yeah, it's and it's.
-0:17:48.120 --> 0:17:58.90
-Speaker 1
-Well, I would say you probably want to pick the one with the newer operating system to do the install the old on Prem, one in lenexa's you know eight years old or something. So as soon as.
-0:17:58.940 --> 0:18:3.810
-Speaker 1
-Soon as we're done destroying all the 2012 boxes, we're going for the 20 sixteens so.
-0:18:4.470 --> 0:18:4.810
-Nick.Currie
-There.
-0:18:6.90 --> 0:18:6.740
-Nick.Currie
-Alright.
-0:18:5.250 --> 0:18:18.680
-Bradley.Sando
-So, so, so that would probably be the easiest process would be to migrate it over to the new new server and then do the in place upgrade from there. Is that what you're thinking? Are you thinking to do a fresh install on the new server?
-0:18:19.360 --> 0:18:30.470
-Nick.Currie
-Dan, I'm thinking the latter, the fresh install, why spend the time to migrate all this stuff from the old box to this Azure box if all we need to do is just?
-0:18:31.370 --> 0:18:33.380
-Nick.Currie
-Install version 20.
-0:18:34.790 --> 0:18:57.140
-Nick.Currie
-I don't know if we'd have to install version 23, so I need to ask open now. I need to talk to open LM support and find out if installing version 23 on a new box and pointing it to that server will upgrade the and restructure the database schema. Or if the first thing we should do is upgrade the on Prem to 5-6.
-0:18:58.140 --> 0:19:3.470
-Nick.Currie
-Then install on the Azure box and point that there so the database schemas already.
-0:19:4.820 --> 0:19:5.480
-Nick.Currie
-Updated.
-0:19:7.340 --> 0:19:11.10
-Bradley.Sando
-Yeah. And you also have to consider two, you have to update those brokers.
-0:19:13.350 --> 0:19:14.820
-Nick.Currie
-Yeah, yeah, and those.
-0:19:16.60 --> 0:19:16.510
-Nick.Currie
-I mean.
-0:19:19.880 --> 0:19:20.220
-Nick.Currie
-Or not.
-0:19:16.290 --> 0:19:22.680
-Bradley.Sando
-Not know if they're backwards compatible. If they are, you could update the brokers first, then do the open LM.
-0:19:23.240 --> 0:19:40.780
-Nick.Currie
-No, they're not. Unfortunately, somebody installed, probably Femi or Farhan, no big deal. Install the new broker on actually that computers and structures server we called out earlier and it hasn't been reporting any data legitimately for a while.
-0:19:41.540 --> 0:19:46.540
-Nick.Currie
-I'm showing license dates and sessions dates that start in 1969.
-0:19:51.210 --> 0:19:51.540
-Bradley.Sando
-OK.
-0:19:50.110 --> 0:19:54.520
-Nick.Currie
-So yeah, I I don't think upgrading the brokers first is the right way to go.
-0:19:54.830 --> 0:19:55.130
-Bradley.Sando
-No.
-0:19:59.370 --> 0:19:59.760
-Nick.Currie
-OK.
-0:20:11.470 --> 0:20:23.480
-Bradley.Sando
-And so I think the minimum minimum requirements on this was the for the 23 version with eight cores and 32 gigs of RAM. What is the current state of that new server?
-0:20:25.340 --> 0:20:32.930
-Speaker 1
-OK. Well I I think the performance goes on the database, not the app and it's 100 BTU's, so there's no comparison.
-0:20:33.590 --> 0:20:34.30
-Bradley.Sando
-OK.
-0:20:41.990 --> 0:20:42.410
-Nick.Currie
-Umm.
-0:20:44.780 --> 0:21:0.810
-Nick.Currie
-And I mean, John, I think in one of your early emails you pointed out that if we get that thing running version 23, when we notice that the server is just like dear God, I can't handle it. That's a, that's a point where we can look at upgrading the resources on that box.
-0:21:9.850 --> 0:21:10.250
-Nick.Currie
-OK.
-0:21:3.130 --> 0:21:10.920
-Speaker 1
-Yeah, the platform OPS guys do monitoring on all the servers, they know if they're out of RAM or they're pegged all the time and they can bump up the skew.
-0:21:11.540 --> 0:21:12.650
-Nick.Currie
-OK, excellent.
-0:21:11.730 --> 0:21:17.330
-Speaker 1
-I'm assuming that's how the database made it from AA10DT used to 100 or whatever somebody.
-0:21:18.100 --> 0:21:22.570
-Speaker 1
-Site pegged or saw query performance tank and they just bump the slider up.
-0:21:24.730 --> 0:21:25.70
-Bradley.Sando
-I.
-0:21:24.960 --> 0:21:25.450
-Nick.Currie
-How's the?
-0:21:26.150 --> 0:21:41.430
-Bradley.Sando
-You know, I guess, Nick, you that you know that might be a question we might want to ask open LM though is why that is using so many resources. From what I've seen, I mean the data that it's actually pulling from those is pretty minimal.
-0:21:43.640 --> 0:21:50.250
-Bradley.Sando
-I I I can't imagine why that would be taking up so much, so many so much resources in space.
-0:21:53.410 --> 0:22:3.260
-Speaker 1
-In the database you mean? I mean you can look at the queries and you know it'll it'll recommend all the indexes that the product should have that they probably don't. So.
-0:22:3.720 --> 0:22:8.560
-Bradley.Sando
-Right. Well, and how often it's polling, because I'm sure I'm assuming it's logging every time it pulls.
-0:22:12.170 --> 0:22:13.410
-Nick.Currie
-Yeah, we'll just assume so.
-0:22:15.100 --> 0:22:34.620
-Nick.Currie
-I mean that if you, I don't know if this is a direct correlation, but if you go into that easy admin portal that you logged into first about every minute and 1/2 it blanks and refreshes the data. So it might be writing to that database at that same frequency.
-0:22:37.840 --> 0:22:42.440
-Nick.Currie
-I'm sorry if that's kind of just in clinic educated assumption because it totally is.
-0:22:53.950 --> 0:22:58.600
-Speaker 1
-I mean, I guess from a disk space perspective, it's tiny. It's only 15 gig of data.
-0:22:59.150 --> 0:22:59.510
-Nick.Currie
-Mm-hmm.
-0:22:59.460 --> 0:23:2.470
-Speaker 1
-So it's not like it's writing a whole bunch of stuff, but.
-0:23:4.180 --> 0:23:4.450
-Bradley.Sando
-It.
-0:23:3.690 --> 0:23:5.540
-Speaker 1
-Well, I mean, yeah, it gets a little spiky.
-0:23:9.70 --> 0:23:9.490
-Nick.Currie
-Mentioned.
-0:23:7.350 --> 0:23:13.810
-Speaker 1
-You're on me. I mean, you should be able to hopefully go into the portal and see this stuff, but if not.
-0:23:15.190 --> 0:23:17.830
-Speaker 1
-I mean, this is the the database right here.
-0:23:19.710 --> 0:23:21.800
-Speaker 1
-So it's just 100 BTU's.
-0:23:22.560 --> 0:23:23.330
-Speaker 1
+
+Kayla.Kirzinger   17:27
+So I I also have a couple inquiry API and quite frankly with this one it's splitting hairs because they really originate in an 8. They get sent to SAP, they're used out of SAP. The source of truth is a bit muddy on this one. I would use the one that the actual process of pulling them is better for you because WBS is a huge data set, right. So pick the endpoint that is giving you.
+
+Aaron.Knox   17:51
+It is.
+
+Kayla.Kirzinger   17:55
+I would, if it were me building it. I guess I would try to pick the one that was giving me the easiest. Like if I need them by project then pick the one that I can pull by project if I need them by particular WBS ID, pick the one I can pick that way because this is a painful data set, it's so big.
+
+Aaron.Knox   18:06
 And.
-0:23:29.420 --> 0:23:30.780
-Speaker 1
-That's going on right now.
-0:23:31.920 --> 0:23:32.240
-Nick.Currie
-Wow.
-0:23:40.990 --> 0:23:49.290
-Bradley.Sando
-Well, it it just surprised me that I mean all it's doing is pulling licensing information and user logins and that type of thing why it should be.
-0:23:50.230 --> 0:23:51.540
-Bradley.Sando
-So resource intensive.
-0:23:54.330 --> 0:24:14.460
-Speaker 1
-Well, like I said, that's the we we can get into the queries and I guarantee that if you turn on, you just accept the recommended indexes 9 times out of 10, it's solves all your app performance problems and the issue is the vendor doesn't create those indexes when they configure the database.
-0:24:15.290 --> 0:24:15.940
-Speaker 1
-Ohh.
-0:24:16.760 --> 0:24:19.240
-Speaker 1
-So just is what it is.
-0:24:18.160 --> 0:24:24.90
-Bradley.Sando
-So that might be worth a dropping into your scope here. Neck is just to have a the indexes recreated.
-0:24:27.80 --> 0:24:32.850
-Bradley.Sando
-Of course, this can all change. You know what version 23? That with new brokers and the new server.
-0:24:34.910 --> 0:24:35.600
-Speaker 1
-It'll change.
-0:24:34.860 --> 0:24:37.180
-Bradley.Sando
-It may be it may be different, yeah.
-0:24:38.840 --> 0:24:42.830
-Speaker 1
-I mean, you can get into the query performance insight thing here and it'll tell you.
-0:24:43.780 --> 0:24:54.830
-Speaker 1
-You know what's your? What's your most frequent query? What's consuming all the performance and the time and everything, top five queries and you can let it just optimize for you solve the problem.
-0:24:55.940 --> 0:25:2.250
-Speaker 1
-It's amazing how many products we own that you know they all run a lot better if we just auto optimized.
-0:25:3.340 --> 0:25:3.810
-Nick.Currie
-OK.
-0:25:9.0 --> 0:25:14.90
-Bradley.Sando
-Yeah. And how many problems can be solved just with a with a correct indexes?
-0:25:17.690 --> 0:25:23.50
-Speaker 1
-Yeah, I don't know enough about the schema because you know it's vendor where obviously nobody here probably knows.
-0:25:23.930 --> 0:25:25.700
-Speaker 1
-What in the world they're doing with this thing?
-0:25:28.160 --> 0:25:28.750
-Speaker 1
-But.
-0:25:29.990 --> 0:25:31.380
-Speaker 1
-These are long queries.
-0:25:29.940 --> 0:25:31.550
-Nick.Currie
-I certainly don't know enough about it.
-0:25:32.270 --> 0:25:34.920
-Speaker 1
-Look at the duration. This is like a 3 minute query.
-0:25:38.780 --> 0:25:39.690
-Speaker 1
-Ohh man.
-0:25:40.580 --> 0:25:41.360
-Speaker 1
-That's brutal.
-0:25:40.510 --> 0:25:47.920
-Bradley.Sando
-See, I would. I would expect that if you know we had thousands of servers or something, but we only have this handful of servers and.
-0:25:49.70 --> 0:25:53.740
-Speaker 1
-Now it's just highly unoptimized sequel with seven left Outer joins.
-0:25:57.20 --> 0:26:1.120
-Speaker 1
-That's yeah, outer join. Left outer join. Left outer join? Yeah.
-0:26:3.650 --> 0:26:5.900
-Speaker 1
-Hey, it runs like up Sam go us.
-0:26:7.910 --> 0:26:8.390
-Speaker 1
-Anyway.
-0:26:9.0 --> 0:26:9.810
-Nick.Currie
-OK.
-0:26:10.410 --> 0:26:17.820
-Speaker 1
-Yeah, this this is all pretty trivial to do. You can get one of the Dbas to help you if you don't understand what's going on with the queries, they can explain it to you. But.
-0:26:19.130 --> 0:26:28.740
-Speaker 1
-Yeah, I mean I I don't know if if the vendor would care that we've optimized their database for them, but hey, maybe they've already done this optimization in the new version.
-0:26:29.370 --> 0:26:33.480
-Speaker 1
-Or maybe they just tell everybody you need 8 cores, so it doesn't matter.
-0:26:32.520 --> 0:26:34.140
-Nick.Currie
-Because of this junk.
-0:26:36.480 --> 0:26:37.190
-Nick.Currie
-Well said.
-0:26:38.210 --> 0:26:38.420
-Bradley.Sando
-Well.
-0:26:41.740 --> 0:26:43.550
-Bradley.Sando
-I've got a hard stop here at 4.
-0:26:44.80 --> 0:26:44.360
-Nick.Currie
-Come.
-0:26:45.30 --> 0:26:49.310
-Bradley.Sando
-A John. What we're trying to do is we're gonna try to get this through ARB tomorrow.
-0:26:50.930 --> 0:27:14.20
-Bradley.Sando
-You don't see any issues with the current since we already have those servers already stood up. If we make this our architectural plan, we should be able to to push this through and I don't. Can't imagine we would need any additional changes, but I will find out what the protocols are between the brokers and the open LM server and and get those noted on here prior to that.
-0:27:17.140 --> 0:27:25.430
-Speaker 1
-OK. Well, yeah, I think it all just gets pending whatever Nick decides to do or with the vendor recommends given our situation, you know, but.
-0:27:25.520 --> 0:27:25.760
-Bradley.Sando
 Yeah.
-0:27:24.450 --> 0:27:26.600
-Nick.Currie
-Yeah, I'll call them. I'll call them immediately.
-0:27:27.510 --> 0:27:28.920
-Bradley.Sando
-Let's let's touch base.
-0:27:27.480 --> 0:27:30.750
-Speaker 1
-But you know, there's resources, though. They're ready to go.
-0:27:33.190 --> 0:27:34.890
-Bradley.Sando
-Let's touch base in the morning then, Nick.
-0:27:35.420 --> 0:27:36.70
-Nick.Currie
-Absolutely.
-0:27:36.740 --> 0:27:37.20
-Bradley.Sando
+
+Kayla.Kirzinger   18:13
+So I have two inquiry API, this particular one just get WBS details is really by WBS ID.
+So that one may not be useful for you. You really should pass like one ID to this one. But then I also have.
+Under projects which how does the alphabet work? UM project WBS, details and so this ones like Project Slash, Project ID, WBS. So you can pass a project, get all the WBS back.
+
+Travis.Coker   18:42
+Umm.
+Do you have a call for contract line items?
+
+Kayla.Kirzinger   18:47
+Uh.
+
+Aaron.Knox   18:51
+Nice.
+
+Kayla.Kirzinger   18:53
+That one is definitely gonna be. So we're working on an API for purchase order purchase order like period.
+It turns out it's like really hard. So it's taking us a minute.
+Umm, but in Nate I think does I don't know. I think I found when I was looking at these, they're contracts APIs are not surfaced here. So I think you might be hooked on this one.
+
+Aaron.Knox   19:19
+Contracts get.
+
+Travis.Coker   19:21
+Well, it's so.
+
+Kayla.Kirzinger   19:21
+That's contacts.
+
+Aaron.Knox   19:23
+That's contacts. Yeah, I.
+
+Travis.Coker   19:23
+No. So.
+Alright, I'm. I'm not sure if I. I guess it might be within the contracts area. That's a good question. I don't know. So it's a part of the accounting process for the change budget control process where you have WBS moves and on federal projects you have WBS moves and clean moves, clelin contract line item.
+
+Aaron.Knox   19:26
+I need my glasses.
+
+Kayla.Kirzinger   19:38
 OK.
-0:27:39.140 --> 0:27:39.430
-Nick.Currie
 OK.
-0:27:44.200 --> 0:27:45.140
-Bradley.Sando
-Anything else?
-0:27:51.700 --> 0:27:52.490
-Nick.Currie
-Think I'm solid.
-0:27:50.450 --> 0:27:54.660
-Bradley.Sando
-All right. Well, thank you all. And you guys have a good afternoon.
-0:27:56.130 --> 0:27:56.680
-James.Oehring
-Thanks fellas.
-0:27:55.720 --> 0:27:56.770
-Nick.Currie
-Indeed y'all as well.
-0:27:57.570 --> 0:27:59.310
-Bradley.Sando
-Alright, take care. Bye.
+
+Travis.Coker   19:47
+So.
+The from a business perspective, when you have a federal contract, you have WBS codes that are specific to keyword work, but then you have approved contract line items. You know that are part of the government contract where if X or Y number of dollars is move from one contract line item to another, we need to be able to audit them. So one of the ideas in our use cases was being able to.
+All to populate the power app as close as possible to real time.
+WBS code so the account get codes area.
+
+Kayla.Kirzinger   20:26
+Mm-hmm.
+
+Travis.Coker   20:27
+And then also clean moves to track it. So pulling contract line items and I'm not sure if those are in the same areas within eight or if those are in different modules.
+
+Kayla.Kirzinger   20:32
+So.
+In another life, I was in the field like 10 years ago, so I have like a really tiny slice of business manager knowledge, kicking around somewhere back here and to me that rings as like the contract contract, like the prime contract with an owner rather than the contract with a subcontract and the contract of subcontract is gonna be contracts in an 8, if that makes sense. Your owner contract is not a contract in an 8.
+It's not a purchase order. Your owner contract is going to be based on your like WBS structure and your ECB structure. And so I'm wondering if those clan moves actually correspond to like CCB budget moves on your actual contract structure.
+
+Travis.Coker   21:23
+Who?
+Unknown.
+
+Kayla.Kirzinger   21:27
+So couple of points.
+
+Travis.Coker   21:28
+Good questions though.
+
+Kayla.Kirzinger   21:30
+A couple points there. Cost items are gonna be OK from innate. You may struggle with like.
+So, like, here's like forecast for example, right? So I would take a look at some of these, right. So this is like forecast by cost item that might be something that's good. You also have control cost item here.
+Umm.
+I would say when you're starting to get, if it needs to get really granular with control, you're going to start to struggle with some of these because it starts to be really dimensional information.
+And it may couple of things. It may make sense to bounce into the reporting API and see if some of these are helpful, because this obviously is extremely granular.
+However, there's this kind of a double edged sword, right? You really need to know what you're asking for here, because if you're pulling the wrong thing, there's a million things might not be right.
+
+Travis.Coker   22:26
+Also, weren't you saying that this is the report server? So this is the one that's cloned like once a day or. Ohh.
+
+Kayla.Kirzinger   22:32
+This is in EDW much quicker, yes. So this one might just be worth going to the sequel side of it as well.
+The other thing I'll say is we return pretty significant amount of information about the WBS budget, forecast, whatever on the query Pi one as well. So you're gonna get like the WBS's account code, but you're gonna get current budget, current estimate forecast, all of those. So contract information as well here.
+And so there's a handful of different ways to get that with that one, I would really like dive into like what exactly is it that you're looking for?
+But because there's like a three or four different ways to slice that piece here, I can help with that. I'm super familiar with all these concepts and where they go in SAP, all of those things. So if I can be of any assistance, let me know.
+
+Travis.Coker   23:34
+So I'm just going to Melissa, the questions that you're asking me, we could be able to. So Melissa is just kind of brought an idea where.
+Would we be able to solution both?
+
+Kayla.Kirzinger   23:48
+Yeah.
+
+Travis.Coker   23:48
+Core API and innate the Microsoft in eight connector base it based on what data is exposed to us through those two different methodologies like try and pull as much as we possibly can from coreapi, identify what data points we can't.
+
+Kayla.Kirzinger   23:51
+No reason you couldn't use both.
+Yep.
+
+Travis.Coker   24:07
+And then when we talk well.
+Assuming solutions architecture gives us the green light to move forward with continuing on the NA connector, work with the innate connector folks to make sure that the first data points that they exposed to that innate connector are the ones that we need that we're not getting in core API can be like make those recommendations to an 8 and say hey, these are the data points we think you ought to expose to the Microsoft in eight connector.
+
+Kayla.Kirzinger   24:23
+Yes.
+And then, yeah, and I mean, like I said, I still stand by the original point go for source of truth. If big it from where it's supposed to be picked from it, I'd really have not invested in one versus the other. But you're going to have the most success with your app if you're picking where it's supposed to come from.
+
+Melissa.Swing   24:37
+Umm.
+
+Kayla.Kirzinger   24:49
+But yeah, you could use both.
+That's not a problem at all.
+
+Aaron.Knox   24:52
+Yeah.
+
+Travis.Coker   24:52
+Yeah, that's the great question though is what's the?
+
+Aaron.Knox   24:53
+Kayla this this connector.
+Uh from NA is brand new. It just came out of preview.
+
+Kayla.Kirzinger   25:00
+I'm sitting here being like, what are they making connectors? They have so many things to fix.
+
+Aaron.Knox   25:00
+So.
+I know, yeah.
+
+Kayla.Kirzinger   25:07
+But with that too, I have a this is more of I don't know enough about like power stuff. Can you make like a straight up rest call without a connector or is it necessitate that you have like a connector behind it?
+
+Aaron.Knox   25:17
+Yeah.
+No, I I I would just use the the rest connector to to make that happen. They the.
+
+Kayla.Kirzinger   25:24
+OK, if if they're jamming you on that, I can help you get set up with the credentials for just like direct and eight call as well. So keep that in your back pocket.
+
+Aaron.Knox   25:31
+Cool, yeah.
+Yeah. Yeah, yeah, yeah, that's just that's just another connector to make an HTTP request all.
+
+Kayla.Kirzinger   25:38
+The only thing that may be difficult with that is the async response.
+
+Aaron.Knox   25:43
+That's true.
+Yeah.
+
+Kayla.Kirzinger   25:44
+I I have done an and so this is another like worst case scenario we had another tool that could not handle that async response. So I created like a little baby wrapper that turned it into a synchronous guy. If I will. Not suggesting that to solution your stuff here but it's not if it's make or break for you guys. This sounds like a really useful tool that you're making, so keep that in mind as well.
+
+Aaron.Knox   25:58
+OK.
+Yeah.
+Yeah. No, no, I think I think all of the uh.
+The power automate can handle async uh, but that's good to know.
+
+Kayla.Kirzinger   26:18
+OK. Yeah, we we just implemented a project with it because we're moving all the innate stuff to our integrations tools like the actual enterprise integrations we have for an 8. And we were like, ohh, we're gonna check that async header to make sure our sync succeeded and we just put it in prod last week and we got stack overflows all over because it takes a Nate so long to populate that header that we're, we bashed it so many times, we just stack overflowed our whole platform. So be cautious with it.
+
+Aaron.Knox   26:40
+Mm-hmm. I bet.
+
+Kayla.Kirzinger   26:48
+The is the moral of that story.
+But yeah, I mean that's I think I think you guys have a good idea under yeah, but if you need any help with any of the data stuff, this is definitely my wheelhouse here.
+
+Aaron.Knox   27:04
+Yeah. Yeah, it's sure sounds like it. Thanks so much, Kayla. This like, really.
+Wrapped up a lot of questions I had and and now I understand how all this works. I knew we were doing some kind of sequel sync.
+With an A but I didn't know exactly like it was a. It's a clone job and it's.
+
+Kayla.Kirzinger   27:24
+Umm, I think they use that HVR tool. The replicator from the Georeplicated server. I just I gotta figure out how an ADA is actually getting it there, because people ask this all the time and I'm like it's on some schedule.
+
+Aaron.Knox   27:24
+And it's it's basically.
+Yeah.
+Yep.
+
+Kayla.Kirzinger   27:37
+OK.
+
+Aaron.Knox   27:37
+Umm yeah, I know that.
+But it's good to know it's not a nightly thing, it is. It is more of a like you said, quasi real time. I like that.
+
+Kayla.Kirzinger   27:43
+Umm.
+Yes. Yeah, well, nothing is real time.
+
+Aaron.Knox   27:48
+Like.
+Of course.
+
+Kayla.Kirzinger   27:52
+So and if you have any access issues, let me know too, I can maybe help with them. I I'll tell you. Admittedly, I still can't call the reporting API. I don't know what role I need for the reporting API. Is what I don't have it. But if you have issues with the integration API I can probably help. So let me know.
+
+Aaron.Knox   28:10
+Well, yeah. I mean, I think I think that's just gonna be temporary. I think going forward will just start connecting to prod and we're just talking about Gits. You know we we just we just wanna get information, we're not, we're not even at the point where we want to post anything nor probably would we want to we we probably wanna go through you and make sure that you know core can't handle that that post. So really we're doing about reading like you said the source of truth.
+
+Kayla.Kirzinger   28:22
+Yeah.
+It's fine.
+Yeah.
+
+Aaron.Knox   28:40
+And what makes sense? But but I'm with Travis. I'm gonna try to do everything through the core API. Since we already have it.
+
+Kayla.Kirzinger   28:46
+Sure.
+
+Aaron.Knox   28:48
+It's already there.
+
+Kayla.Kirzinger   28:49
+Umm, that connector is like 17 years old. I might blast V1 into a connector. Do I have V1 in a connector? I don't think I have V1 in a connector.
+
+Aaron.Knox   28:56
+Yeah.
+It's. Yeah, I mean.
+It's it's because you just upload it like what the the swagger file or something and it just it just goes it's it's pretty easy process to make that connector in but but Travis.
+
+Kayla.Kirzinger   29:08
+Mm-hmm.
+Yeah, I'm gonna put an item on my To Do List to reap it.
+
+Aaron.Knox   29:16
+Yeah, it it just name it something different. So there's two out there. But Travis, that we need that those connectors in our environment, it's only in the default environment right now.
+Uh.
+
+Travis.Coker   29:27
+Which embarked just I need to know which environments that you need to have those characters in non.
+
+Aaron.Knox   29:31
+Non problem prod just our our DTS environments.
+Because right now I can only use.
+
+Travis.Coker   29:38
+And it's not in the sandbox.
+Non prod is the sandbox environment and it it doesn't have deal. I'm if I remember correctly it doesn't have the LP.
+
+Aaron.Knox   29:46
+Last time I checked was there, but you know, maybe I could just add it, I don't know, but that's.
+That's one thing we might have to work through is just to expose that to our environment. So it's just so. So it's just not default right now. I just see it in default, but I haven't been there in a while. Maybe you guys have have done that since.
+
+Travis.Coker   29:58
+Locate so.
+I don't think so. I I mean, unless Michael Baugh did it, then you know, then I'll say that I haven't done that and I'll I'll put it to you that.
+
+Aaron.Knox   30:07
+Like so.
+I can't.
+
+Travis.Coker   30:20
+OK.
+
+Aaron.Knox   30:20
+It's not a huge deal. I just wanted to mention that that right now I can only get that.
+And uh, default. But it's it's not a huge problem.
+
+Travis.Coker   30:31
+I'd rather not be in our environments too, so that way we're not messing around the default.
+Umm.
+I'm trying to think.
+Of any other questions that solutions architecture might want to hear, or we might want to clarify. Aaron, do you have?
+Anything floating around.
+That you can think you wanna have answers to.
+
+Kayla.Kirzinger   30:54
+UH-1 this is the dumbest thing in the world and Nate has a real cursed situation with their credentials where they can only enable one set of Olaf credentials at once.
+Don't ask why.
+Please, but if you need credentials to the direct API, we are your guys.
+You can't ask innate for credentials because they can't make new credentials.
+
+Aaron.Knox   31:22
+That's that's good to know.
+
+Kayla.Kirzinger   31:24
+Yeah, very dumb.
+
+Travis.Coker   31:26
+It seems like they should be able to though.
+
+Kayla.Kirzinger   31:29
+One would think, yeah.
+
+Travis.Coker   31:33
+OK. Umm.
+So I think our next steps, Melissa.
+Are to one provide this recording to over to. Was it Louise and Brad? Let them let them just have this to consume.
+
+Melissa.Swing   31:44
+Mm-hmm. Bradley. Yeah.
+
+Travis.Coker   31:50
+Confirm with them what they.
+If is it up to solutions, architecture is to what our source of truth is or is that?
+Like, how does that work out?
+
+Kayla.Kirzinger   31:59
+I don't.
+
+Melissa.Swing   32:00
+Think of probably make suggestions, but yeah.
+
+Kayla.Kirzinger   32:00
+You know, I don't know.
+Yeah.
+They may not know even that type of like specific information.
+Uh.
+But they may be able to give you guidance. I bet you they would probably just say Louise would probably say go with the source of truth.
+
+Melissa.Swing   32:14
+Mm-hmm.
+Mm-hmm.
+
+Kayla.Kirzinger   32:19
+So as long as you guys in good faith are doing that, I'm sure they're gonna be good with it.
+
+Travis.Coker   32:24
+OK.
+
+Melissa.Swing   32:26
+Source of truth and probably fastest.
+
+Travis.Coker   32:26
+And Aaron?
+
+Melissa.Swing   32:29
+2.
+
+Travis.Coker   32:30
+Or the truth and fastest real time closest to real time. Those are the two key qualifiers here.
+
+Kayla.Kirzinger   32:31
+Hmm.
+Mm-hmm.
+
+Melissa.Swing   32:34
+Yeah.
+
+Kayla.Kirzinger   32:39
+Yeah.
+
+Travis.Coker   32:39
+OK.
+
+Melissa.Swing   32:40
+OK, so we get this over to Bradley. Yeah, I think we need to redefine a little bit more of the project scope just to kind of encompass a few things that we learned here today.
+
+Travis.Coker   32:47
+Yeah.
+We need to pull in. We need to pull core API into the learning of this the the scope of this particular research project, because Aaron's gonna need time to play with Corey API and really. And Aaron, what I'm looking at of you is is be able to tell me or like, OK, I can get XY and Z from query API but I can't get why I can't get. You know I can't get G you know.
+
+Melissa.Swing   32:54
+Yeah.
+Mm-hmm.
+Yep.
+
+Aaron.Knox   33:14
+Yeah, I've I I've used it for like projects, districts, real simple things and and it works great. But like WBS and, you know, granular information. Yeah, that's I. That's where I I'm not sure.
+
+Kayla.Kirzinger   33:16
+Yeah, and it's.
+That's what it's for.
+That's more zesty. Yep.
+
+Travis.Coker   33:33
+Project specific WBS, though that's really where we're drilling.
+
+Kayla.Kirzinger   33:35
+Yeah, that one's not quite so bad, but cause it's, you know, you're pulling by project, but I don't have anything to keep in mind is it's a living API like it's not an old product. So if there's something that you're like damn this endpoints perfect, but there's one field we don't have, that's fine. We can often add it. I'm not gonna say 100% of the time because if it's tomfoolery field we might not but.
+
+Aaron.Knox   33:38
+Babe.
+Yeah.
+
+Kayla.Kirzinger   33:57
+A lot of the time, if it's just one, one or two things that would make it great for you guys, we can just add them.
+
+Aaron.Knox   34:03
+Extend the schema, yeah.
+
+Kayla.Kirzinger   34:04
+Yep.
+A lot of these are sequel backed, so it's as difficult as adding another field to the sequel query so.
+
+Aaron.Knox   34:12
+Yep.
+
+Travis.Coker   34:15
+OK, so I think our next steps is to update the project Charter to include core API research. And then Aaron, I think one of your takeaways is a part of this is the research to perform with core API to ascertain what data points we think we can get for the CBCR app for Mary. Now, Ken, did the estimate for that. So I think this is going to quickly turn into a you and Ken talking to each other.
+
+Melissa.Swing   34:22
+Umm.
+Uh-huh.
+
+Travis.Coker   34:46
+About this app how this app is built and the things that we want to grab for the additional enhancements so that we can accomplish Mary's auditing requests in the app.
+And then through those conversations you've ascertained through those conversations ascertained your data points that you need to get through whatever core API or Nate and then telling us like which ones we can get from core API and which ones we can't like I don't, I don't know what that level of effort looks like for you and that's probably?
+After we get done with CHPE, so maybe middle of June Ish.
+
+Aaron.Knox   35:26
+There.
+
+Travis.Coker   35:27
+And Melissa, from a timing standpoint, I was trying to, I was trying to keep this all in June, but we have some other cascading things that are pushing us back a little bit. Aaron, I don't think is going to be able to get to started until after June 7th.
+Because we've got a project, we got a product demo.
+For the client in this first month in this first week here, so it's probably going to extend into July a little bit.
+
+Melissa.Swing   35:46
+Umm.
+Well, I.
+Actually anticipated that you're end date is the 31st of July. So remember then I add 30 days.
+
+Travis.Coker   35:58
+Yeah. Oh, that's right. That's right. That's right. We did. Yeah. And I do now. I do now. I do now.
+Do you think I'm missing anything, Melissa, as far as?
+
+Melissa.Swing   36:08
+No, I I don't. I stepped away for a minute and I I know we're over time, but just one thing in the back of my head is load testing, load testing, load testing. We have learned, learned. Learned what you see in test is not the same Paul in production. And there I know QA has working on, you know, automated load testing. I'm already working on them with something else, so I just always wanna. That's in the back of my head now because it's constant thing I'm hearing.
+
+Kayla.Kirzinger   36:35
+One thing I don't know is whether you're working with like a particular slice of the business or not. Doesn't really matter if you need like we have like a list of like cursed projects like ones that either have like way too many damn WBS or like whatever it might be. So if or like too much equipment on them. And so we can feed those two. Yeah. I don't know if they like fall into the slice of the groups that you may be working with, but like the ones that kind of break half of the things every time we're trying to do something and those do exist in non prod environments.
+
+Melissa.Swing   37:04
+Hmm.
+
+Kayla.Kirzinger   37:07
+So if we can be of any assistance, let me know.
+
+Melissa.Swing   37:07
+Umm.
+So maybe after we're done mapping it all out, we we have somebody go check our work and say, Yep, that's gonna be a problem there. That's gonna be a problem there. You know, if you could help us out that way.
+
+Kayla.Kirzinger   37:24
+Sure.
+
+Melissa.Swing   37:24
+Anything any known issues that were not aware of?
+
+Kayla.Kirzinger   37:28
+Yeah, absolutely.
+
+Travis.Coker   37:30
+I think and then.
+
+Aaron.Knox   37:31
+Kayla I I got one more question for you.
+Going back to connectors.
+We've been talking about basically like just API type connectors.
+We also have in the Microsoft ecosystem a SQL connector. I mean I could connect straight to sequel and do queries to my hearts content.
+
+Kayla.Kirzinger   37:53
+Umm.
+
+Aaron.Knox   37:54
+I'm guessing you would rather us go through the core API, then hit SQL proper.
+Or is that what's what? What's your thoughts on that?
+
+Kayla.Kirzinger   38:02
+OK, that's a fun question.
+Umm, so this one I might kick back a little bit to architecture because of my lack of knowledge around the power platform specifically, but we have a pattern that is my like child essentially where we receive events out of SAP on like a feed we model them and then we store them in a database and then that's actually what the API is backed with.
+Umm. And we also event them onto queues, so really you would make my life if you ever wanted to use one of those queues. Less storage queues because that would be really cool. I have one power automate that's being triggered by one of the queues and I like love it. But anyways, so to a degree we have quite a few entities stored here in what we call the Kiewit common data model in our database. I don't personally have an issue with you guys plugging directly into those KCDM models in the database.
+
+Aaron.Knox   38:33
+Yeah.
+
+Kayla.Kirzinger   39:05
+It's more limited because this is a newer pattern, so we're going like entity by entity and refitting it we have like employee equipment, materials cost centers, couple of other things.
+Again, I don't have a problem with you guys plugging straight into that. I would defer to architecture to make sure that that's their idea there, but that could be an option as well.
+
+Aaron.Knox   39:26
+OK.
+OK, fair enough.
+
+Kayla.Kirzinger   39:30
+They're pretty nice. They're like, normalized and flattened and modeled so.
+There should. The idea was to make something we could kind of just like select star for the API.
+
+Aaron.Knox   39:40
+But.
+
+Kayla.Kirzinger   39:42
+Uh, so yeah, I mean that's their four consumption. So I don't have a, I don't have a problem, but I would check into that first.
+
+Aaron.Knox   39:42
+Yeah, I I'm.
+OK.
+Yeah, I I'm still leaning towards just the core API, but.
+I just wanted to throw that out there so everyone's aware that we do have that, that direct sequel option as long as it's an Azure SQL.
+Instance if it's on Prem then I think they turned off that gateway.
+To allow us to come on Prem. So it's got to be an Azure SQL but.
+
+Travis.Coker   40:13
+Well, and the goal here.
+
+Aaron.Knox   40:14
+I'm guessing the innate stuff it is, I don't know.
+
+Kayla.Kirzinger   40:14
+Ohh yeah, I've.
+
+Travis.Coker   40:16
+The goal here.
+
+Kayla.Kirzinger   40:19
+He.
+Hmm.
+
+Travis.Coker   40:34
+No.
+
+Aaron.Knox   40:34
+One or the other not combined. It's I just it's.
+I guess it it it it it, it would be where it would make sense and I'm thinking it probably would never make sense but.
+
+Kayla.Kirzinger   40:39
+Gotcha.
+
+Aaron.Knox   40:45
+It's it's another tool in the toolbox. That's all.
+
+Kayla.Kirzinger   40:49
+Uh, yeah.
+
+Travis.Coker   40:49
+Well, and depending how complex we get with this whole, the whole idea is, yeah, we want to stay away from stacking on connectors. But ultimately like even if we had two or three premium connectors stacked in an app, you're still only talking but.
+30 or 45 bucks a month.
+
+Kayla.Kirzinger   41:06
+Yeah, that's. I mean, sounds like you've got way more value than that.
+
+Travis.Coker   41:06
+Fee cost, which is still like compared to.
+Yeah. I just, yeah. Pennies in the pennies to the dollar compared to other things or across the project.
+I don't I I've got plenty of time to keep talking about this, but I don't wanna hold everybody else up. If you've got stuff to do.
+
+Kayla.Kirzinger   41:28
+I definitely need to at least get more coffee, so it drank the whole cup.
+
+Travis.Coker   41:28
+But this has been great information. Yeah, well, I think I definitely want to figure out a way to open the door communication wise. Caleb, between your team and our team, I I think I think all of our developers should be talking to your folks a lot more just to understand data structure and where things are at and that will just help us build apps better.
+
+Kayla.Kirzinger   41:42
+Yeah.
+Yeah, I mean, we just sit between like everything and everything else. So it always, if it usually gets fired across our bow. So we have a lot of exposure to a lot of different data sources and we like to help.
+
+Aaron.Knox   42:04
+But.
+But. But Kayla aren't aren't you? Isn't your team populating some SharePoint lists for consumption, or is that a different? Yeah. See, so Kayla's already doing some of that where we don't even need to create the flow to create the list. They're doing that for us. So. So those things we need to let the team know Travis. And then maybe if if they could, we could add to that.
+
+Kayla.Kirzinger   42:12
+Hmm.
+Umm.
+We love to.
+
+Aaron.Knox   42:29
+Then then yeah, because then.
+
+Travis.Coker   42:31
+I sent her a request already for some other stuff that.
+
+Kayla.Kirzinger   42:33
+Yep, I actually just a heads up on that. So I I involved data architecture and they like liked it enough that now they're like let's have a meeting and talk about what we can do with it. But they're all in snowflake training this week. So I'm having a meeting with them next week. So just so you know, I didn't drop that it just I have to talk to them next week.
+
+Travis.Coker   42:43
+Yay.
+Yeah.
+OK, cool. Cool, cool, cool.
+I figured it is going to take a little bit.
+
+Aaron.Knox   42:53
+And.
+And and Kayla, this this is a licensing thing. If we can just pull from a A a SharePoint list we don't consume premium. So it really helps us out to get that that information that we would otherwise have to pay for a premium connector.
+
+Kayla.Kirzinger   42:55
+I mean.
+Oh, I know.
+I have.
+I have a new one that I think you probably work with Mccaslin.
+
+Travis.Coker   43:12
+Yeah.
+
+Kayla.Kirzinger   43:13
+Yes. No.
+
+Travis.Coker   43:14
+Yeah.
+
+Aaron.Knox   43:14
+Oh yeah.
+
+Kayla.Kirzinger   43:14
+He asked me for one with for opportunities, so heads up that one is there. It's pretty awesome.
+
+Travis.Coker   43:19
+Yeah. No. So there's so there's districts, there's projects, there's opportunities and there's a fourth, isn't there a fourth one though? I thought there was four on the list.
+
+Aaron.Knox   43:20
+Ohh.
+Nice.
+
+Kayla.Kirzinger   43:23
+And opportunities now?
+No, I think just those three. But uh, the opportunities I did nuke quite a bit, it's pretty sensitive piece of data. So there's not like amounts but we got like district market submarket. So check that out.
+
+Travis.Coker   43:28
+3.
+
+Aaron.Knox   43:39
+Cool, yeah.
+
+Travis.Coker   43:39
+Cool.
+
+Kayla.Kirzinger   43:39
+And created about that one.
+
+Travis.Coker   43:42
+Alright, well, I think we're gonna wrap it up. We've got a ton of information here.
+
+Aaron.Knox   43:49
+Great. Thank you.
+
+Kayla.Kirzinger   43:51
+Yeah. Thanks guys.
+
+Travis.Coker   43:51
+And so again. And so in Aaron, if you need anything, you'll just go out to Kayla directly. And Melissa, you've got Kayla added to the project so she can put her time in KDM or yes. No.
+
+Aaron.Knox   43:56
+Yep.
+
+Melissa.Swing   44:03
+I can definitely do that if you if you need that, Kayla. Yep.
+
+Kayla.Kirzinger   44:05
+OK.
+
+Melissa.Swing   44:07
+I'll just.
+
+Travis.Coker   44:07
+Um.
+
+Melissa.Swing   44:09
+Send you the information.
+
+Travis.Coker   44:11
+Aaron, I don't know how we're gonna do your time. We'll have to talk to Brian.
+
+Aaron.Knox   44:16
+I'll just wing it like I normally do.
+
+Travis.Coker   44:20
+Uh, yeah, we gotta figure that out. That's that's a whole question. Alright. So thank you so much for all the time. I really, really appreciate it. Good talk. And Melissa, we'll just continue to meet on this and we'll figure out what our next steps is. But a time on my calendar, we'll figure out what we're gonna do with the scope and change how that we're going to change that.
+
+Kayla.Kirzinger   44:22
+Same.
+Similar here. Alright. Thanks guys.
+
+Melissa.Swing   44:32
+Yeah.
+OK.
+Yep.
+All right. We'll do. Thank you.
+
+Travis.Coker   44:42
+Thank you all so much.
+
+Aaron.Knox   44:43
+Thanks, Melissa. Thanks, Kayla.
+
+Travis.Coker   44:44
+Thank you.
+
+Melissa.Swing   44:44
+By.
+
+Kayla.Kirzinger   44:45
+Thanks guys. See you.
+
+Travis.Coker   44:45
+Bye bye.
+
+Melissa.Swing left the meeting
+
+Kayla.Kirzinger left the meeting
+
+Aaron.Knox left the meeting
+
+Travis.Coker stopped transcription
