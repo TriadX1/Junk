@@ -1,1102 +1,506 @@
-Transcript
-May 25, 2023, 1:37PM
-
-Travis.Coker   0:03
-We are live OK, there we go.
-
-Travis.Coker started transcription
-
-Travis.Coker   0:09
-Purpose of this call is to kind of give benchmark information between using the core API through Caleb Kushner's Integrated Services Department or taking a look at the Microsoft in a connector and trying to introduce that as my teams primary method of connecting within a documentation or not data.
-But solutions architecture wanted this call put together and wanted to understand what you know, what are the differences and similarities between core API and then the in eight connector. And so I've got Aaron, I've got Kayla. I've got Melissa here to help kind of guide this a little bit and I'm gonna switch this over to Kayla. You are kind of the person I'm wanting to hear some data from in regards to this topic. So you have the floor.
-But you're muted, so it's not going to sound very well.
-
-Kayla.Kirzinger   1:05
-I know my row is getting a little head. They're having fun.
-That's how I know it's fine and keep having fun.
-So I wanna show you guys rather than tell you guys.
-I figured that would be easier.
-
-Travis.Coker   1:19
-Even better.
-
-Kayla.Kirzinger   1:22
-And so, Aaron, obviously since you're asking for the tenant, you've used the innate API portal.
-Or are using or starting to use.
-
-Aaron.Knox   1:30
-Yeah, but I don't know. I don't know what I'm doing.
-
-Kayla.Kirzinger   1:33
-That's fair.
-OK, so I am going to share my screen.
-Umm, so ironically, these are actually both the same portal well created in the same tool because both and and eight are.
-Microsoft Azure shops so but our tool is just the more new version of what they have.
-So I think they're on their way to doing this at as well. So this is Corey API, it's sometimes called Enterprise API doesn't really matter. And then this one is Inates API portal.
-So these are both available to you. I know you already. Like I said, use the API one for an 8 a little bit, but this one is available as well.
-Umm, it is controlled by AD groups. So sometimes I find if I'm working with like non core KTG people you might not have immediate access, but it's remedied very easily by adding an ad group. So don't worry about it.
-So I guess before I jump into like looking at them, the overall difference is obviously the innate API is in front of all specifically innate data and so sourced out of an 8 being pulled out of an 8 et cetera, whereas query API really it's, I don't even wanna say SAP because it's that's probably a misdirection. The idea is that we're servicing like general data that KIEWIT uses.
-In like a modelled format. So things that we use commonly over and over and over again here, so like employees, equipment, projects, districts.
-Things like that it also is there to provide a door in and out of our back end systems for creating data in a Safeway. So like an example would be we have a way that you can create an invoice or a timesheet.
-That's like a safe and agreed upon manner so that if we got a new app that needed to create a timesheet, they can hook into this and then that way we know that's going where it needs to go. So it's kind of both sides of that coin.
-Uh surfacing data in a modeled way, but then also safe creation of data of a lot of it is SAP because of a lot of our data lives in SAP, but not all of it is SAP in necessarily.
-And so I don't wanna put it out that way. The Anna one, quite frankly, is about the same thing, but for an aid, right? So a lot of different entities that are used in an 8.
-Umm account codes, plans components um even their core master data entities so employees and projects. However of course in that case you're sourcing it from innate, not from our source of truth. So in cases like that, it's probably not the right choice, but I think in general the answer here is for you guys is use the source of truth when possible, right? And if innate is the source of truth for that data excellent? The Innate API is a great choice.
-If SAP or resource planner or whatever TG tool or Kiewit tool is the source of truth, use Core API if it's there.
-
-Travis.Coker   4:51
-So with. With that being said, because.
+//Atlas Application code
+#define BLYNK_TEMPLATE_ID "TMPL2Iw7pr9GS"
+#define BLYNK_TEMPLATE_NAME "Atlas"
+#define BLYNK_FIRMWARE_VERSION "0.5.6"
 
-Kayla.Kirzinger   4:51
-Umm.
-
-Travis.Coker   4:55
-The innate.
-The innate data flows to ODS and EDW. If I understand the whole chain correctly, it's just about ohh some of it not.
-
-Kayla.Kirzinger   5:05
-Some of it.
-Well, so OK, this is an opportunity. Yeah. This is an opportunity to jump into here for realsies. So there's several APIs in here.
-
-Aaron.Knox   5:09
-Yeah, can can you elaborate on that, Kayla? Yeah.
-Yeah.
-
-Kayla.Kirzinger   5:19
-The Integrations API is like a tactical API, so that's the API that we use to talk to in eight for the actual pieces of data that send back and forth from our systems.
-It's also closer to Cory API in the sense that the data that it does return so not the posts and puts, but the data that it does return is closer to like a modeled version of that data, rather than like a 100,000 field reporting view of that data. So like account codes is a good example. I mean this is pretty verbose regardless, but you're not getting, say, like a dimensional view over time of the account called through this, so you're getting master data here.
-The rest of these post endpoints you can see it's majority post on this one is truly how we communicate with an 8. So when we're creating projects, employees, equipment.
-Whatever else thinks we create in an 8, these are the endpoints that we hit.
-But I would say that the on the converse, the gets are nice. If I was feeding an app, I would probably use these.
-Even this one right like this is teeny tiny for countries.
-Now the other ones we have here, so these three, these are reporting API, they are like night on Table Copy API. So they'll pull back like a really verbose data set that's pretty close to how the data like the literal data in innate is. And these are the ones that we copy over into ODS EDW.
-
-Aaron.Knox   6:55
-And what what's that schedule? What's that copy schedule?
-
-Kayla.Kirzinger   6:55
-So you're seeing.
-Umm, so it's changed over time. We used to do it daily, but now we're actually pulling from a georeplicated server that in a created. So it's quasi real time I believe. But with that said, there's whatever latency exists on the innate side between their actual server and the georep.
-I don't know what that is, but the way we're copying it from the georeplicated server is quasi real time.
-
-Aaron.Knox   7:32
-OK.
-
-Kayla.Kirzinger   7:34
-However, these so just to reiterate, these integrations API are are real time. Nothing's really real time, but they're pulling from like the actual data.
-
-Travis.Coker   7:45
-O When we're saying quasi real time we're we're saying something like.
-Moment of Pull request plus or minus like 20 minutes or like 2 hours or.
-
-Kayla.Kirzinger   7:53
-Well, the recording ones.
-The reporting ones they have to clone into the Georeplicated server and I'm not really sure what schedule and AIDS cloning into that. I don't think it's like daily. I think it's probably like hourly or something or you know, I don't know for sure, but.
-Depending on your use case, I would really recommend trying to use the integrations API if the data you need is available. It's much more lightweight. You're not looking at getting something that has 7 billion fields and you're gonna need to pull in 17 different ways to try and get all of the data you need. Like it's a list of account codes or it's a list of countries. So if it possibly would get it here.
-Umm, I'm not really sure in terms of their connector that they've built for the power platform. I have no idea which of these is exposed, I've only really ever dealt with the like actual API.
-
-Aaron.Knox   8:49
-Yeah, you're right. They haven't exposed everything and in their API, so we'll just have to sort through that.
-
-Kayla.Kirzinger   8:55
-Yeah. And then are you familiar with like making calls in here?
-
-Aaron.Knox   9:00
-Yeah, you know where you click on try it.
-
-Kayla.Kirzinger   9:04
-Yep, the one suggestion I would have that I like to do, it's just like a personal suggestion is I like to do like a top ten in here because it's kind of a stinker.
-
-Aaron.Knox   9:04
-But but.
-Yeah.
-
-Kayla.Kirzinger   9:15
-And so that way you can just see a small set of the data without needing a large one. You can also get pretty creative with the filter. I suggest like trying it if you need it, like try different things and if you're not familiar with Odata syntax for any reason I can help there.
-
-Aaron.Knox   9:20
-Sure.
-No, no, no, I I am.
-
-Kayla.Kirzinger   9:32
-Cool.
-
-Aaron.Knox   9:33
-But but this this triad and then all all the prefixes, the subscription keys, that's kind of where I'm.
-
-Kayla.Kirzinger   9:40
-Yeah.
-
-Aaron.Knox   9:41
-You know, because it logs me in.
-
-Kayla.Kirzinger   9:44
-Umm.
-
-Aaron.Knox   9:45
-And then like and then it puts the subscription key and then it actually puts it in the bottom.
-
-Kayla.Kirzinger   9:50
-Yep.
-
-Aaron.Knox   9:51
-Uh, but every time I run stuff, either I get a air or I don't get any information. So.
-
-Kayla.Kirzinger   9:56
-Here's the trick I think. Perhaps this is fun, so I'm gonna do top 10.
-I don't remember what prefix were on this is it's a real, UM, real game. I know I don't. I already don't remember.
-
-Aaron.Knox   10:07
-You you e-mail me those. Yeah. And I know that's that's a moving target. Yeah.
-
-Kayla.Kirzinger   10:13
-I think it's 234 is the.
-I just also repointed all our interfaces on these so you'd think I would remember.
-
-Aaron.Knox   10:17
-And then there's.
-But but Travis, this is part of the challenge because that that changes.
-
-Kayla.Kirzinger   10:26
-It does.
-
-Aaron.Knox   10:27
-But, but that's just that's just a test or dev right? Production won't ever change, so OK.
-
-Kayla.Kirzinger   10:31
-Yes. Yeah.
-It does not. OK, so you have to do this little auth drop down, right? I'm sure you know.
-
-Aaron.Knox   10:39
-Yes. Yeah. And and and and that seems to work.
-
-Kayla.Kirzinger   10:41
-Now here's the trickery. So you probably think that this is an empty response. It's not. You have to grab what they're passing in the location header here.
-
-Aaron.Knox   10:54
-They are that you have but.
-
-Kayla.Kirzinger   10:54
-Drop it into another browser window.
-
-Aaron.Knox   10:56
-Sure to to to see that. But see, I'm not even getting that either. I get a access denied or an error.
-
-Kayla.Kirzinger   11:03
-OK. Then in that case, let me know when you're trying it. It may actually be that you don't have access to the tenant at all.
-And in the so I'm not gonna go down the auth hole here because it's gonna be the rest of our meeting in the particular way that the portal authenticates. It does use your user context in the way that you authenticate when you're doing this programmatically for whatever you're gonna end up coding here. You can make it not use your user context, so don't worry about that in the long term. But in order to use the portal, you do have to be a user. So.
-
-Aaron.Knox   11:11
-Like.
-Yeah.
-OK.
-Gotcha.
-
-Travis.Coker   11:35
-So real quick here. If would it make any difference if I've already laid the groundwork with the in a?
-Product owners and they've told me that both.
-
-Kayla.Kirzinger   11:44
-I'll just make you a user. I don't care.
-
-Travis.Coker   11:46
-Aaron, Aaron, and.
-Can have TST O1 access and they have the highest level access within that environment.
-
-Kayla.Kirzinger   11:55
-I mean, I would have to see what you're getting back, but I'll just, I I couldn't be in here too. It's fine.
-
-Travis.Coker   12:02
-I don't know if that statement is even applicable to what you're talking about, because some of this is over my head.
-
-Kayla.Kirzinger   12:07
-Look at you. I think you're in here several times. If anything, this is the love Lee experience of innate. Look at you. Yeah, we got several of you here.
-
-Aaron.Knox   12:13
-See it, it's.
-Well, there's junior. That's that's a new Knox. That's not me.
-
-Kayla.Kirzinger   12:19
-Uh.
-
-Aaron.Knox   12:21
-I know.
-
-Kayla.Kirzinger   12:25
-Oh, we don't like that date.
-How about December 29th? OK, yeah. You don't have rules. Yeah.
-I'm just gonna make you super account admin at the very top level. Congratulations.
-
-Aaron.Knox   12:41
-But this is still the that the test.
-
-Kayla.Kirzinger   12:43
-It's 234. I'm not. I probably could give you access. I'm proud, but I don't like to involve myself with that kind of stuff. So.
-
-Aaron.Knox   12:46
-OK.
-That's that. I mean, I think that will be the next step once we work through this, but.
-
-Kayla.Kirzinger   12:53
-Yeah. So give this well, so you like I said, ultimately, so like I'll just really do a quick dalliance in here.
-Umm.
-And eight and eight and eight.
-Ohh my whole computer is having a moment.
-
-Aaron.Knox   13:09
-What's what's insomnia? What is this?
-
-Kayla.Kirzinger   13:10
-Umm.
-It's just the rest. The rest client I use.
-
-Aaron.Knox   13:14
-Ohh OK, that's cool.
-
-Kayla.Kirzinger   13:16
-Umm, so you can see here this is me grabbing a token and it this token has absolutely nothing to do with me since it's client credentials. So you can implement this way ultimately either through the connector or whatever, you won't need access in prod to do this.
-Umm. OK. So then really quick just so you have it back to core API, so you can make your own decisions which is really what this portal is for is the both of them. It's to enable you to have all the information to make your own calls here.
-Uh, so I always have to give this disclaimer cause this is dumb. Also don't get super excited, but if you guys have feedback here for power platform I made this so long ago I made this ages ago and no one cared.
-
-Aaron.Knox   13:57
-I saw that.
-I saw that, yeah.
-
-Kayla.Kirzinger   14:01
-Uh, so yeah, if you guys have feedback for.
-
-Aaron.Knox   14:02
-I do. I do. I thought it was great. Kayla, keep up the good work.
-
-Travis.Coker   14:06
-We will totally put some feedback on this.
-
-Kayla.Kirzinger   14:08
-This I would love it. I never ended up making the custom connector for Power BI because I got confused. But I did make a power apps custom connector so.
-
-Aaron.Knox   14:09
-Hell yes.
-We don't care about power guy.
-You did and I and I used it. It's it. It works great.
-
-Kayla.Kirzinger   14:19
-Yay.
-Uh, so anyways, yeah, if you have feedback for that page, I would love to hear it, but there's a small bug here. I swear it's Microsoft when you hit this sign in button, so prior to signing in, just like the innate portal, you can't see API when you hit the sign in button, it does the same thing that the token thing in the innate one does it wing wings you back to the home page? I don't know, man. It's it's silly. Just go back in.
-And when you go back in the API are available.
-
-Aaron.Knox   14:51
-Cool.
-
-Kayla.Kirzinger   14:51
-I have way more than you guys would have. You're probably just gonna see core API.
-
-Aaron.Knox   14:55
-Yeah.
-
-Kayla.Kirzinger   14:55
-Umm, they're sorted by. I tried to sort them by tag. This was an interesting choice.
-There are multiple pages.
-
-Aaron.Knox   15:02
-Oh well.
-I I do see like the one and then just core that API. So OK.
-
-Kayla.Kirzinger   15:07
-That's fine, I would use V1. It's the newer 1, unsurprisingly.
-
-Aaron.Knox   15:10
-Yeah, yeah.
-
-Kayla.Kirzinger   15:13
-But basically in here it's your playground, so you can try them. You can check them, you can use them if you want to use them. Whatever.
-
-Aaron.Knox   15:16
-Yep.
-Yeah.
-Yeah, and you're right, this interface has changed. It looks like you updated this.
-Whatever from from Azure.
-
-Kayla.Kirzinger   15:29
-Yeah, they put out this like new developer portal.
-
-Aaron.Knox   15:30
-It's like this. This new version, yeah.
-
-Kayla.Kirzinger   15:33
-It's fine. I like it. I'm like, obviously not a UX UI designer.
-So, but it's it's more obviously it gives you way more than like what we had here, which was nothing.
-
-Aaron.Knox   15:40
-It worked and.
-Yes.
-
-Kayla.Kirzinger   15:47
-Umm, so that's nice. But yeah, I encourage you to try these. I would say things like where we really get the dividing line is like don't get your list of employees from an 8, right? Like if you needed them, there's absolutely no reason to do that.
-
-Aaron.Knox   15:48
-Yeah.
-Sure.
-
-Kayla.Kirzinger   16:03
-You know, even cost centers projects are legal entities, those kinds of things. They're not ruminate, so don't grab them from there if you're using them. But otherwise, things that are ultimately sourced and innate. This is really the right place to go.
-
-Aaron.Knox   16:17
-Like the town codes.
-
-Travis.Coker   16:18
-So.
-So yeah, let's talk about that real quick, Aaron. So we're thinking use cases for account codes, we're thinking use cases for equipment codes.
-
-Kayla.Kirzinger   16:20
-Umm yeah, that's the right source.
-
-Travis.Coker   16:27
-We're thinking of use cases for right now.
-
-Kayla.Kirzinger   16:31
-Equipment. I would go here. We have super verbose equipment information.
-
-Travis.Coker   16:33
-OK.
-Umm.
-
-Kayla.Kirzinger   16:36
-Umm. If there's something you need to like, ask me for equipment, let me know. But this is for sure for sure the right source of truth for equipment information.
-
-Travis.Coker   16:47
-Umm.
-And try Aaron. I'm trying to think of other things related to the, the the idea of process the this get the schedule impact cause that's hitting.
-
-Kayla.Kirzinger   16:50
-And we.
-
-Travis.Coker   17:00
-In eight control.
-I think and.
-I don't know all of the get actions in that area.
-
-Kayla.Kirzinger   17:10
-Yeah. So control would depend. UM.
-You. You're gonna see things named cost item.
-In in eight rather than UM, WBS, so be on the lookout for that.
-
-Travis.Coker   17:22
-Oh, no, that's good. That's good, because we do need to call WBS codes. So that would be get.
-
-Aaron.Knox   17:26
-Yeah.
-
-Kayla.Kirzinger   17:27
-So I I also have a couple inquiry API and quite frankly with this one it's splitting hairs because they really originate in an 8. They get sent to SAP, they're used out of SAP. The source of truth is a bit muddy on this one. I would use the one that the actual process of pulling them is better for you because WBS is a huge data set, right. So pick the endpoint that is giving you.
-
-Aaron.Knox   17:51
-It is.
-
-Kayla.Kirzinger   17:55
-I would, if it were me building it. I guess I would try to pick the one that was giving me the easiest. Like if I need them by project then pick the one that I can pull by project if I need them by particular WBS ID, pick the one I can pick that way because this is a painful data set, it's so big.
-
-Aaron.Knox   18:06
-And.
-Yeah.
-
-Kayla.Kirzinger   18:13
-So I have two inquiry API, this particular one just get WBS details is really by WBS ID.
-So that one may not be useful for you. You really should pass like one ID to this one. But then I also have.
-Under projects which how does the alphabet work? UM project WBS, details and so this ones like Project Slash, Project ID, WBS. So you can pass a project, get all the WBS back.
-
-Travis.Coker   18:42
-Umm.
-Do you have a call for contract line items?
-
-Kayla.Kirzinger   18:47
-Uh.
-
-Aaron.Knox   18:51
-Nice.
-
-Kayla.Kirzinger   18:53
-That one is definitely gonna be. So we're working on an API for purchase order purchase order like period.
-It turns out it's like really hard. So it's taking us a minute.
-Umm, but in Nate I think does I don't know. I think I found when I was looking at these, they're contracts APIs are not surfaced here. So I think you might be hooked on this one.
-
-Aaron.Knox   19:19
-Contracts get.
-
-Travis.Coker   19:21
-Well, it's so.
-
-Kayla.Kirzinger   19:21
-That's contacts.
-
-Aaron.Knox   19:23
-That's contacts. Yeah, I.
-
-Travis.Coker   19:23
-No. So.
-Alright, I'm. I'm not sure if I. I guess it might be within the contracts area. That's a good question. I don't know. So it's a part of the accounting process for the change budget control process where you have WBS moves and on federal projects you have WBS moves and clean moves, clelin contract line item.
-
-Aaron.Knox   19:26
-I need my glasses.
-
-Kayla.Kirzinger   19:38
-OK.
-OK.
-
-Travis.Coker   19:47
-So.
-The from a business perspective, when you have a federal contract, you have WBS codes that are specific to keyword work, but then you have approved contract line items. You know that are part of the government contract where if X or Y number of dollars is move from one contract line item to another, we need to be able to audit them. So one of the ideas in our use cases was being able to.
-All to populate the power app as close as possible to real time.
-WBS code so the account get codes area.
-
-Kayla.Kirzinger   20:26
-Mm-hmm.
-
-Travis.Coker   20:27
-And then also clean moves to track it. So pulling contract line items and I'm not sure if those are in the same areas within eight or if those are in different modules.
-
-Kayla.Kirzinger   20:32
-So.
-In another life, I was in the field like 10 years ago, so I have like a really tiny slice of business manager knowledge, kicking around somewhere back here and to me that rings as like the contract contract, like the prime contract with an owner rather than the contract with a subcontract and the contract of subcontract is gonna be contracts in an 8, if that makes sense. Your owner contract is not a contract in an 8.
-It's not a purchase order. Your owner contract is going to be based on your like WBS structure and your ECB structure. And so I'm wondering if those clan moves actually correspond to like CCB budget moves on your actual contract structure.
-
-Travis.Coker   21:23
-Who?
-Unknown.
-
-Kayla.Kirzinger   21:27
-So couple of points.
-
-Travis.Coker   21:28
-Good questions though.
-
-Kayla.Kirzinger   21:30
-A couple points there. Cost items are gonna be OK from innate. You may struggle with like.
-So, like, here's like forecast for example, right? So I would take a look at some of these, right. So this is like forecast by cost item that might be something that's good. You also have control cost item here.
-Umm.
-I would say when you're starting to get, if it needs to get really granular with control, you're going to start to struggle with some of these because it starts to be really dimensional information.
-And it may couple of things. It may make sense to bounce into the reporting API and see if some of these are helpful, because this obviously is extremely granular.
-However, there's this kind of a double edged sword, right? You really need to know what you're asking for here, because if you're pulling the wrong thing, there's a million things might not be right.
-
-Travis.Coker   22:26
-Also, weren't you saying that this is the report server? So this is the one that's cloned like once a day or. Ohh.
-
-Kayla.Kirzinger   22:32
-This is in EDW much quicker, yes. So this one might just be worth going to the sequel side of it as well.
-The other thing I'll say is we return pretty significant amount of information about the WBS budget, forecast, whatever on the query Pi one as well. So you're gonna get like the WBS's account code, but you're gonna get current budget, current estimate forecast, all of those. So contract information as well here.
-And so there's a handful of different ways to get that with that one, I would really like dive into like what exactly is it that you're looking for?
-But because there's like a three or four different ways to slice that piece here, I can help with that. I'm super familiar with all these concepts and where they go in SAP, all of those things. So if I can be of any assistance, let me know.
-
-Travis.Coker   23:34
-So I'm just going to Melissa, the questions that you're asking me, we could be able to. So Melissa is just kind of brought an idea where.
-Would we be able to solution both?
-
-Kayla.Kirzinger   23:48
-Yeah.
-
-Travis.Coker   23:48
-Core API and innate the Microsoft in eight connector base it based on what data is exposed to us through those two different methodologies like try and pull as much as we possibly can from coreapi, identify what data points we can't.
-
-Kayla.Kirzinger   23:51
-No reason you couldn't use both.
-Yep.
-
-Travis.Coker   24:07
-And then when we talk well.
-Assuming solutions architecture gives us the green light to move forward with continuing on the NA connector, work with the innate connector folks to make sure that the first data points that they exposed to that innate connector are the ones that we need that we're not getting in core API can be like make those recommendations to an 8 and say hey, these are the data points we think you ought to expose to the Microsoft in eight connector.
-
-Kayla.Kirzinger   24:23
-Yes.
-And then, yeah, and I mean, like I said, I still stand by the original point go for source of truth. If big it from where it's supposed to be picked from it, I'd really have not invested in one versus the other. But you're going to have the most success with your app if you're picking where it's supposed to come from.
-
-Melissa.Swing   24:37
-Umm.
-
-Kayla.Kirzinger   24:49
-But yeah, you could use both.
-That's not a problem at all.
-
-Aaron.Knox   24:52
-Yeah.
-
-Travis.Coker   24:52
-Yeah, that's the great question though is what's the?
-
-Aaron.Knox   24:53
-Kayla this this connector.
-Uh from NA is brand new. It just came out of preview.
-
-Kayla.Kirzinger   25:00
-I'm sitting here being like, what are they making connectors? They have so many things to fix.
-
-Aaron.Knox   25:00
-So.
-I know, yeah.
-
-Kayla.Kirzinger   25:07
-But with that too, I have a this is more of I don't know enough about like power stuff. Can you make like a straight up rest call without a connector or is it necessitate that you have like a connector behind it?
-
-Aaron.Knox   25:17
-Yeah.
-No, I I I would just use the the rest connector to to make that happen. They the.
-
-Kayla.Kirzinger   25:24
-OK, if if they're jamming you on that, I can help you get set up with the credentials for just like direct and eight call as well. So keep that in your back pocket.
-
-Aaron.Knox   25:31
-Cool, yeah.
-Yeah. Yeah, yeah, yeah, that's just that's just another connector to make an HTTP request all.
-
-Kayla.Kirzinger   25:38
-The only thing that may be difficult with that is the async response.
-
-Aaron.Knox   25:43
-That's true.
-Yeah.
-
-Kayla.Kirzinger   25:44
-I I have done an and so this is another like worst case scenario we had another tool that could not handle that async response. So I created like a little baby wrapper that turned it into a synchronous guy. If I will. Not suggesting that to solution your stuff here but it's not if it's make or break for you guys. This sounds like a really useful tool that you're making, so keep that in mind as well.
-
-Aaron.Knox   25:58
-OK.
-Yeah.
-Yeah. No, no, I think I think all of the uh.
-The power automate can handle async uh, but that's good to know.
-
-Kayla.Kirzinger   26:18
-OK. Yeah, we we just implemented a project with it because we're moving all the innate stuff to our integrations tools like the actual enterprise integrations we have for an 8. And we were like, ohh, we're gonna check that async header to make sure our sync succeeded and we just put it in prod last week and we got stack overflows all over because it takes a Nate so long to populate that header that we're, we bashed it so many times, we just stack overflowed our whole platform. So be cautious with it.
-
-Aaron.Knox   26:40
-Mm-hmm. I bet.
-
-Kayla.Kirzinger   26:48
-The is the moral of that story.
-But yeah, I mean that's I think I think you guys have a good idea under yeah, but if you need any help with any of the data stuff, this is definitely my wheelhouse here.
-
-Aaron.Knox   27:04
-Yeah. Yeah, it's sure sounds like it. Thanks so much, Kayla. This like, really.
-Wrapped up a lot of questions I had and and now I understand how all this works. I knew we were doing some kind of sequel sync.
-With an A but I didn't know exactly like it was a. It's a clone job and it's.
-
-Kayla.Kirzinger   27:24
-Umm, I think they use that HVR tool. The replicator from the Georeplicated server. I just I gotta figure out how an ADA is actually getting it there, because people ask this all the time and I'm like it's on some schedule.
-
-Aaron.Knox   27:24
-And it's it's basically.
-Yeah.
-Yep.
-
-Kayla.Kirzinger   27:37
-OK.
-
-Aaron.Knox   27:37
-Umm yeah, I know that.
-But it's good to know it's not a nightly thing, it is. It is more of a like you said, quasi real time. I like that.
-
-Kayla.Kirzinger   27:43
-Umm.
-Yes. Yeah, well, nothing is real time.
-
-Aaron.Knox   27:48
-Like.
-Of course.
-
-Kayla.Kirzinger   27:52
-So and if you have any access issues, let me know too, I can maybe help with them. I I'll tell you. Admittedly, I still can't call the reporting API. I don't know what role I need for the reporting API. Is what I don't have it. But if you have issues with the integration API I can probably help. So let me know.
-
-Aaron.Knox   28:10
-Well, yeah. I mean, I think I think that's just gonna be temporary. I think going forward will just start connecting to prod and we're just talking about Gits. You know we we just we just wanna get information, we're not, we're not even at the point where we want to post anything nor probably would we want to we we probably wanna go through you and make sure that you know core can't handle that that post. So really we're doing about reading like you said the source of truth.
-
-Kayla.Kirzinger   28:22
-Yeah.
-It's fine.
-Yeah.
-
-Aaron.Knox   28:40
-And what makes sense? But but I'm with Travis. I'm gonna try to do everything through the core API. Since we already have it.
-
-Kayla.Kirzinger   28:46
-Sure.
-
-Aaron.Knox   28:48
-It's already there.
-
-Kayla.Kirzinger   28:49
-Umm, that connector is like 17 years old. I might blast V1 into a connector. Do I have V1 in a connector? I don't think I have V1 in a connector.
-
-Aaron.Knox   28:56
-Yeah.
-It's. Yeah, I mean.
-It's it's because you just upload it like what the the swagger file or something and it just it just goes it's it's pretty easy process to make that connector in but but Travis.
-
-Kayla.Kirzinger   29:08
-Mm-hmm.
-Yeah, I'm gonna put an item on my To Do List to reap it.
-
-Aaron.Knox   29:16
-Yeah, it it just name it something different. So there's two out there. But Travis, that we need that those connectors in our environment, it's only in the default environment right now.
-Uh.
-
-Travis.Coker   29:27
-Which embarked just I need to know which environments that you need to have those characters in non.
-
-Aaron.Knox   29:31
-Non problem prod just our our DTS environments.
-Because right now I can only use.
-
-Travis.Coker   29:38
-And it's not in the sandbox.
-Non prod is the sandbox environment and it it doesn't have deal. I'm if I remember correctly it doesn't have the LP.
-
-Aaron.Knox   29:46
-Last time I checked was there, but you know, maybe I could just add it, I don't know, but that's.
-That's one thing we might have to work through is just to expose that to our environment. So it's just so. So it's just not default right now. I just see it in default, but I haven't been there in a while. Maybe you guys have have done that since.
-
-Travis.Coker   29:58
-Locate so.
-I don't think so. I I mean, unless Michael Baugh did it, then you know, then I'll say that I haven't done that and I'll I'll put it to you that.
-
-Aaron.Knox   30:07
-Like so.
-I can't.
-
-Travis.Coker   30:20
-OK.
-
-Aaron.Knox   30:20
-It's not a huge deal. I just wanted to mention that that right now I can only get that.
-And uh, default. But it's it's not a huge problem.
-
-Travis.Coker   30:31
-I'd rather not be in our environments too, so that way we're not messing around the default.
-Umm.
-I'm trying to think.
-Of any other questions that solutions architecture might want to hear, or we might want to clarify. Aaron, do you have?
-Anything floating around.
-That you can think you wanna have answers to.
-
-Kayla.Kirzinger   30:54
-UH-1 this is the dumbest thing in the world and Nate has a real cursed situation with their credentials where they can only enable one set of Olaf credentials at once.
-Don't ask why.
-Please, but if you need credentials to the direct API, we are your guys.
-You can't ask innate for credentials because they can't make new credentials.
-
-Aaron.Knox   31:22
-That's that's good to know.
-
-Kayla.Kirzinger   31:24
-Yeah, very dumb.
-
-Travis.Coker   31:26
-It seems like they should be able to though.
-
-Kayla.Kirzinger   31:29
-One would think, yeah.
-
-Travis.Coker   31:33
-OK. Umm.
-So I think our next steps, Melissa.
-Are to one provide this recording to over to. Was it Louise and Brad? Let them let them just have this to consume.
-
-Melissa.Swing   31:44
-Mm-hmm. Bradley. Yeah.
-
-Travis.Coker   31:50
-Confirm with them what they.
-If is it up to solutions, architecture is to what our source of truth is or is that?
-Like, how does that work out?
-
-Kayla.Kirzinger   31:59
-I don't.
-
-Melissa.Swing   32:00
-Think of probably make suggestions, but yeah.
-
-Kayla.Kirzinger   32:00
-You know, I don't know.
-Yeah.
-They may not know even that type of like specific information.
-Uh.
-But they may be able to give you guidance. I bet you they would probably just say Louise would probably say go with the source of truth.
-
-Melissa.Swing   32:14
-Mm-hmm.
-Mm-hmm.
-
-Kayla.Kirzinger   32:19
-So as long as you guys in good faith are doing that, I'm sure they're gonna be good with it.
-
-Travis.Coker   32:24
-OK.
-
-Melissa.Swing   32:26
-Source of truth and probably fastest.
-
-Travis.Coker   32:26
-And Aaron?
-
-Melissa.Swing   32:29
-2.
-
-Travis.Coker   32:30
-Or the truth and fastest real time closest to real time. Those are the two key qualifiers here.
-
-Kayla.Kirzinger   32:31
-Hmm.
-Mm-hmm.
-
-Melissa.Swing   32:34
-Yeah.
-
-Kayla.Kirzinger   32:39
-Yeah.
-
-Travis.Coker   32:39
-OK.
-
-Melissa.Swing   32:40
-OK, so we get this over to Bradley. Yeah, I think we need to redefine a little bit more of the project scope just to kind of encompass a few things that we learned here today.
-
-Travis.Coker   32:47
-Yeah.
-We need to pull in. We need to pull core API into the learning of this the the scope of this particular research project, because Aaron's gonna need time to play with Corey API and really. And Aaron, what I'm looking at of you is is be able to tell me or like, OK, I can get XY and Z from query API but I can't get why I can't get. You know I can't get G you know.
-
-Melissa.Swing   32:54
-Yeah.
-Mm-hmm.
-Yep.
-
-Aaron.Knox   33:14
-Yeah, I've I I've used it for like projects, districts, real simple things and and it works great. But like WBS and, you know, granular information. Yeah, that's I. That's where I I'm not sure.
-
-Kayla.Kirzinger   33:16
-Yeah, and it's.
-That's what it's for.
-That's more zesty. Yep.
-
-Travis.Coker   33:33
-Project specific WBS, though that's really where we're drilling.
-
-Kayla.Kirzinger   33:35
-Yeah, that one's not quite so bad, but cause it's, you know, you're pulling by project, but I don't have anything to keep in mind is it's a living API like it's not an old product. So if there's something that you're like damn this endpoints perfect, but there's one field we don't have, that's fine. We can often add it. I'm not gonna say 100% of the time because if it's tomfoolery field we might not but.
-
-Aaron.Knox   33:38
-Babe.
-Yeah.
-
-Kayla.Kirzinger   33:57
-A lot of the time, if it's just one, one or two things that would make it great for you guys, we can just add them.
-
-Aaron.Knox   34:03
-Extend the schema, yeah.
-
-Kayla.Kirzinger   34:04
-Yep.
-A lot of these are sequel backed, so it's as difficult as adding another field to the sequel query so.
-
-Aaron.Knox   34:12
-Yep.
-
-Travis.Coker   34:15
-OK, so I think our next steps is to update the project Charter to include core API research. And then Aaron, I think one of your takeaways is a part of this is the research to perform with core API to ascertain what data points we think we can get for the CBCR app for Mary. Now, Ken, did the estimate for that. So I think this is going to quickly turn into a you and Ken talking to each other.
-
-Melissa.Swing   34:22
-Umm.
-Uh-huh.
-
-Travis.Coker   34:46
-About this app how this app is built and the things that we want to grab for the additional enhancements so that we can accomplish Mary's auditing requests in the app.
-And then through those conversations you've ascertained through those conversations ascertained your data points that you need to get through whatever core API or Nate and then telling us like which ones we can get from core API and which ones we can't like I don't, I don't know what that level of effort looks like for you and that's probably?
-After we get done with CHPE, so maybe middle of June Ish.
-
-Aaron.Knox   35:26
-There.
-
-Travis.Coker   35:27
-And Melissa, from a timing standpoint, I was trying to, I was trying to keep this all in June, but we have some other cascading things that are pushing us back a little bit. Aaron, I don't think is going to be able to get to started until after June 7th.
-Because we've got a project, we got a product demo.
-For the client in this first month in this first week here, so it's probably going to extend into July a little bit.
-
-Melissa.Swing   35:46
-Umm.
-Well, I.
-Actually anticipated that you're end date is the 31st of July. So remember then I add 30 days.
-
-Travis.Coker   35:58
-Yeah. Oh, that's right. That's right. That's right. We did. Yeah. And I do now. I do now. I do now.
-Do you think I'm missing anything, Melissa, as far as?
-
-Melissa.Swing   36:08
-No, I I don't. I stepped away for a minute and I I know we're over time, but just one thing in the back of my head is load testing, load testing, load testing. We have learned, learned. Learned what you see in test is not the same Paul in production. And there I know QA has working on, you know, automated load testing. I'm already working on them with something else, so I just always wanna. That's in the back of my head now because it's constant thing I'm hearing.
-
-Kayla.Kirzinger   36:35
-One thing I don't know is whether you're working with like a particular slice of the business or not. Doesn't really matter if you need like we have like a list of like cursed projects like ones that either have like way too many damn WBS or like whatever it might be. So if or like too much equipment on them. And so we can feed those two. Yeah. I don't know if they like fall into the slice of the groups that you may be working with, but like the ones that kind of break half of the things every time we're trying to do something and those do exist in non prod environments.
-
-Melissa.Swing   37:04
-Hmm.
-
-Kayla.Kirzinger   37:07
-So if we can be of any assistance, let me know.
-
-Melissa.Swing   37:07
-Umm.
-So maybe after we're done mapping it all out, we we have somebody go check our work and say, Yep, that's gonna be a problem there. That's gonna be a problem there. You know, if you could help us out that way.
-
-Kayla.Kirzinger   37:24
-Sure.
-
-Melissa.Swing   37:24
-Anything any known issues that were not aware of?
-
-Kayla.Kirzinger   37:28
-Yeah, absolutely.
-
-Travis.Coker   37:30
-I think and then.
-
-Aaron.Knox   37:31
-Kayla I I got one more question for you.
-Going back to connectors.
-We've been talking about basically like just API type connectors.
-We also have in the Microsoft ecosystem a SQL connector. I mean I could connect straight to sequel and do queries to my hearts content.
-
-Kayla.Kirzinger   37:53
-Umm.
-
-Aaron.Knox   37:54
-I'm guessing you would rather us go through the core API, then hit SQL proper.
-Or is that what's what? What's your thoughts on that?
-
-Kayla.Kirzinger   38:02
-OK, that's a fun question.
-Umm, so this one I might kick back a little bit to architecture because of my lack of knowledge around the power platform specifically, but we have a pattern that is my like child essentially where we receive events out of SAP on like a feed we model them and then we store them in a database and then that's actually what the API is backed with.
-Umm. And we also event them onto queues, so really you would make my life if you ever wanted to use one of those queues. Less storage queues because that would be really cool. I have one power automate that's being triggered by one of the queues and I like love it. But anyways, so to a degree we have quite a few entities stored here in what we call the Kiewit common data model in our database. I don't personally have an issue with you guys plugging directly into those KCDM models in the database.
-
-Aaron.Knox   38:33
-Yeah.
-
-Kayla.Kirzinger   39:05
-It's more limited because this is a newer pattern, so we're going like entity by entity and refitting it we have like employee equipment, materials cost centers, couple of other things.
-Again, I don't have a problem with you guys plugging straight into that. I would defer to architecture to make sure that that's their idea there, but that could be an option as well.
-
-Aaron.Knox   39:26
-OK.
-OK, fair enough.
-
-Kayla.Kirzinger   39:30
-They're pretty nice. They're like, normalized and flattened and modeled so.
-There should. The idea was to make something we could kind of just like select star for the API.
-
-Aaron.Knox   39:40
-But.
-
-Kayla.Kirzinger   39:42
-Uh, so yeah, I mean that's their four consumption. So I don't have a, I don't have a problem, but I would check into that first.
-
-Aaron.Knox   39:42
-Yeah, I I'm.
-OK.
-Yeah, I I'm still leaning towards just the core API, but.
-I just wanted to throw that out there so everyone's aware that we do have that, that direct sequel option as long as it's an Azure SQL.
-Instance if it's on Prem then I think they turned off that gateway.
-To allow us to come on Prem. So it's got to be an Azure SQL but.
-
-Travis.Coker   40:13
-Well, and the goal here.
-
-Aaron.Knox   40:14
-I'm guessing the innate stuff it is, I don't know.
-
-Kayla.Kirzinger   40:14
-Ohh yeah, I've.
-
-Travis.Coker   40:16
-The goal here.
-
-Kayla.Kirzinger   40:19
-He.
-Hmm.
-
-Travis.Coker   40:34
-No.
-
-Aaron.Knox   40:34
-One or the other not combined. It's I just it's.
-I guess it it it it it, it would be where it would make sense and I'm thinking it probably would never make sense but.
-
-Kayla.Kirzinger   40:39
-Gotcha.
-
-Aaron.Knox   40:45
-It's it's another tool in the toolbox. That's all.
-
-Kayla.Kirzinger   40:49
-Uh, yeah.
-
-Travis.Coker   40:49
-Well, and depending how complex we get with this whole, the whole idea is, yeah, we want to stay away from stacking on connectors. But ultimately like even if we had two or three premium connectors stacked in an app, you're still only talking but.
-30 or 45 bucks a month.
-
-Kayla.Kirzinger   41:06
-Yeah, that's. I mean, sounds like you've got way more value than that.
-
-Travis.Coker   41:06
-Fee cost, which is still like compared to.
-Yeah. I just, yeah. Pennies in the pennies to the dollar compared to other things or across the project.
-I don't I I've got plenty of time to keep talking about this, but I don't wanna hold everybody else up. If you've got stuff to do.
-
-Kayla.Kirzinger   41:28
-I definitely need to at least get more coffee, so it drank the whole cup.
-
-Travis.Coker   41:28
-But this has been great information. Yeah, well, I think I definitely want to figure out a way to open the door communication wise. Caleb, between your team and our team, I I think I think all of our developers should be talking to your folks a lot more just to understand data structure and where things are at and that will just help us build apps better.
-
-Kayla.Kirzinger   41:42
-Yeah.
-Yeah, I mean, we just sit between like everything and everything else. So it always, if it usually gets fired across our bow. So we have a lot of exposure to a lot of different data sources and we like to help.
-
-Aaron.Knox   42:04
-But.
-But. But Kayla aren't aren't you? Isn't your team populating some SharePoint lists for consumption, or is that a different? Yeah. See, so Kayla's already doing some of that where we don't even need to create the flow to create the list. They're doing that for us. So. So those things we need to let the team know Travis. And then maybe if if they could, we could add to that.
-
-Kayla.Kirzinger   42:12
-Hmm.
-Umm.
-We love to.
-
-Aaron.Knox   42:29
-Then then yeah, because then.
-
-Travis.Coker   42:31
-I sent her a request already for some other stuff that.
-
-Kayla.Kirzinger   42:33
-Yep, I actually just a heads up on that. So I I involved data architecture and they like liked it enough that now they're like let's have a meeting and talk about what we can do with it. But they're all in snowflake training this week. So I'm having a meeting with them next week. So just so you know, I didn't drop that it just I have to talk to them next week.
-
-Travis.Coker   42:43
-Yay.
-Yeah.
-OK, cool. Cool, cool, cool.
-I figured it is going to take a little bit.
-
-Aaron.Knox   42:53
-And.
-And and Kayla, this this is a licensing thing. If we can just pull from a A a SharePoint list we don't consume premium. So it really helps us out to get that that information that we would otherwise have to pay for a premium connector.
-
-Kayla.Kirzinger   42:55
-I mean.
-Oh, I know.
-I have.
-I have a new one that I think you probably work with Mccaslin.
-
-Travis.Coker   43:12
-Yeah.
-
-Kayla.Kirzinger   43:13
-Yes. No.
-
-Travis.Coker   43:14
-Yeah.
-
-Aaron.Knox   43:14
-Oh yeah.
-
-Kayla.Kirzinger   43:14
-He asked me for one with for opportunities, so heads up that one is there. It's pretty awesome.
-
-Travis.Coker   43:19
-Yeah. No. So there's so there's districts, there's projects, there's opportunities and there's a fourth, isn't there a fourth one though? I thought there was four on the list.
-
-Aaron.Knox   43:20
-Ohh.
-Nice.
-
-Kayla.Kirzinger   43:23
-And opportunities now?
-No, I think just those three. But uh, the opportunities I did nuke quite a bit, it's pretty sensitive piece of data. So there's not like amounts but we got like district market submarket. So check that out.
-
-Travis.Coker   43:28
-3.
-
-Aaron.Knox   43:39
-Cool, yeah.
-
-Travis.Coker   43:39
-Cool.
-
-Kayla.Kirzinger   43:39
-And created about that one.
-
-Travis.Coker   43:42
-Alright, well, I think we're gonna wrap it up. We've got a ton of information here.
-
-Aaron.Knox   43:49
-Great. Thank you.
-
-Kayla.Kirzinger   43:51
-Yeah. Thanks guys.
-
-Travis.Coker   43:51
-And so again. And so in Aaron, if you need anything, you'll just go out to Kayla directly. And Melissa, you've got Kayla added to the project so she can put her time in KDM or yes. No.
-
-Aaron.Knox   43:56
-Yep.
-
-Melissa.Swing   44:03
-I can definitely do that if you if you need that, Kayla. Yep.
-
-Kayla.Kirzinger   44:05
-OK.
-
-Melissa.Swing   44:07
-I'll just.
-
-Travis.Coker   44:07
-Um.
-
-Melissa.Swing   44:09
-Send you the information.
-
-Travis.Coker   44:11
-Aaron, I don't know how we're gonna do your time. We'll have to talk to Brian.
-
-Aaron.Knox   44:16
-I'll just wing it like I normally do.
-
-Travis.Coker   44:20
-Uh, yeah, we gotta figure that out. That's that's a whole question. Alright. So thank you so much for all the time. I really, really appreciate it. Good talk. And Melissa, we'll just continue to meet on this and we'll figure out what our next steps is. But a time on my calendar, we'll figure out what we're gonna do with the scope and change how that we're going to change that.
-
-Kayla.Kirzinger   44:22
-Same.
-Similar here. Alright. Thanks guys.
-
-Melissa.Swing   44:32
-Yeah.
-OK.
-Yep.
-All right. We'll do. Thank you.
-
-Travis.Coker   44:42
-Thank you all so much.
-
-Aaron.Knox   44:43
-Thanks, Melissa. Thanks, Kayla.
-
-Travis.Coker   44:44
-Thank you.
-
-Melissa.Swing   44:44
-By.
-
-Kayla.Kirzinger   44:45
-Thanks guys. See you.
-
-Travis.Coker   44:45
-Bye bye.
-
-Melissa.Swing left the meeting
-
-Kayla.Kirzinger left the meeting
-
-Aaron.Knox left the meeting
-
-Travis.Coker stopped transcription
+//Include Libraries
+#include "BlynkEdgent.h"
+#include "arduino_secrets.h"
+#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#include <Adafruit_SSD1306.h>
+#include <TimeLib.h>
+#include <WidgetRTC.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+//Define some global variables with defaults
+int daytime = 1;
+
+float DayBedTemp = 80.0;
+float DayHumidity = 50.00;
+float DayAirTemp = 75.00;
+
+float NightBedTemp = 75.0;
+float NightHumidity = 50.00;
+float NightAirTemp = 70.00;
+
+float AdjustedHumidity = 0;
+float AdjustedAirTemp = 0;
+float AdjustedBedTemp = 0;
+
+float CurrentBedTemp = -100;
+float CurrentAirTemp = -100;
+float CurrentHumidity = 0;
+float CurrentAirPRessure = 0;
+
+//time variables
+int DayStartsTimeHour = 9;
+int DayStartsTimeMinute = 30;
+
+int DayStopsTimeHour = 18;
+int DayStopsTimeMinute = 30;
+
+//Map Relay to Arduino Pins
+int rLEDLight = 0;     //12V relay 3
+int rHumidifier = 1;   //24V relay 4
+int rFreshairFan = 2;  //24v relay 5
+int rBedHeater = 3;    //120V relay 6
+int rUVLight = 4;      //120V relay 7
+int rAirHeater = 5;    //120V relay 8
+
+//1Wire & Bed temp sensor
+
+int oneWireBus = 7;
+OneWire oneWire(oneWireBus);
+DallasTemperature sensors(&oneWire);
+
+//set to 1 for USB serial debugging
+int debug = 0;
+
+//SETUP OLED DISPLAY STUFF
+#define OLED_RESET -1     // define display reset pin
+#define SCREEN_WIDTH 128  // OLED display width, in pixels
+#define SCREEN_HEIGHT 64  // OLED display height, in pixels
+#define SERIAL_BAUD 9600  // Sets the serail baud rate
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+//Misc Stuff
+
+const int ledPin = LED_BUILTIN;
+
+int rOn = LOW;
+int rOff = HIGH;
+
+
+//BLYNK
+BlynkTimer timer;
+BlynkTimer sensortimer;
+BlynkTimer actionlogictimer;
+BlynkTimer freshairfantimer;
+BlynkTimer lighttimer;
+
+
+WidgetRTC rtc;
+
+int LEDstartHour, LEDstartMinute, LEDstopHour, LEDstopMinute;
+int UVstartHour, UVstartMinute, UVstopHour, UVstopMinute;
+
+//BME280 Stuff
+#define SEALEVELPRESSURE_HPA (1013.25)
+//#define BME280_I2C_ADDRESS  0x76  // define BME280 device I2C address: 0x76 or 0x77 (0x77 is library default address)
+Adafruit_BME280 bme;  // I2C
+
+
+
+
+// 'Untitled-1', 128x64px spalshscreen graphic (bitmap) Use http://javl.github.io/image2cpp/
+const unsigned char myBitmap[] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x61, 0x80, 0x01, 0xf8, 0x00, 0xfc, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x18, 0xc0, 0x00,
+  0x00, 0x00, 0xf3, 0xc0, 0x03, 0xf8, 0x00, 0xfe, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x3c, 0xc0, 0x00,
+  0x00, 0x00, 0xd3, 0x60, 0x03, 0x00, 0x00, 0x06, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x34, 0xc0, 0x00,
+  0x00, 0x00, 0xdb, 0x60, 0x03, 0xf8, 0x00, 0x7e, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x36, 0xc0, 0x00,
+  0x00, 0x00, 0xdb, 0x60, 0x03, 0xf8, 0x00, 0xfc, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x36, 0xc0, 0x00,
+  0x00, 0x00, 0xcb, 0x20, 0x03, 0x00, 0x00, 0xf0, 0x00, 0x30, 0x00, 0x0c, 0x00, 0x32, 0xc0, 0x00,
+  0x00, 0x00, 0xcb, 0x30, 0x03, 0x00, 0x00, 0xfc, 0x00, 0x18, 0x00, 0x0c, 0x00, 0x32, 0xc0, 0x00,
+  0x00, 0x00, 0xcf, 0x30, 0x03, 0xf8, 0x00, 0xde, 0x00, 0x1f, 0x80, 0x0c, 0x00, 0x33, 0xc0, 0x00,
+  0x00, 0x00, 0xc6, 0x30, 0x01, 0xf8, 0x00, 0xc6, 0x00, 0x0f, 0x80, 0x0c, 0x00, 0x31, 0x80, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x38, 0x88, 0x00, 0x00, 0x40, 0x00, 0x1c, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x24, 0x80, 0x00, 0x00, 0x40, 0x00, 0x22, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x40, 0x88, 0x5a, 0x1c, 0xe3, 0x80, 0x20, 0x44, 0xe7, 0x1c, 0x2d, 0x0e, 0x00, 0x00,
+  0x00, 0x00, 0x40, 0x88, 0x6d, 0x22, 0x44, 0x40, 0x30, 0x45, 0x12, 0x22, 0x36, 0x91, 0x00, 0x00,
+  0x00, 0x00, 0x40, 0x88, 0x49, 0x0e, 0x44, 0x40, 0x1c, 0x29, 0x82, 0x22, 0x24, 0x98, 0x00, 0x00,
+  0x00, 0x00, 0x40, 0x88, 0x49, 0x12, 0x47, 0xc0, 0x0e, 0x28, 0xe2, 0x3e, 0x24, 0x8e, 0x00, 0x00,
+  0x00, 0x00, 0x40, 0x88, 0x49, 0x22, 0x44, 0x00, 0x02, 0x28, 0x12, 0x20, 0x24, 0x81, 0x00, 0x00,
+  0x00, 0x00, 0x24, 0x88, 0x49, 0x26, 0x46, 0x40, 0x22, 0x39, 0x12, 0x32, 0x24, 0x91, 0x00, 0x00,
+  0x00, 0x00, 0x38, 0x88, 0x49, 0x1e, 0x63, 0x80, 0x1c, 0x10, 0xe3, 0x1c, 0x24, 0x8e, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x0f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x40, 0x1b, 0xfe, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x20, 0x7f, 0xff, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x1c, 0xff, 0xff, 0xde, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x20, 0x7b, 0xff, 0xfb, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x40, 0x3f, 0xf8, 0x7f, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x05, 0x50, 0x0f, 0xb0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x03, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x01, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfa, 0xf8, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x01, 0xef, 0xec, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x1b, 0xc0, 0x00, 0x00, 0x00, 0x03, 0xb0, 0x7e, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x0f, 0xa0, 0x00, 0x00, 0x00, 0x07, 0x60, 0x3a, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x07, 0xe0, 0x00, 0x00, 0x00, 0x0f, 0xc0, 0x0f, 0x80, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x03, 0xf0, 0x00, 0x00, 0x00, 0x0e, 0xc0, 0x07, 0x80, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x01, 0xf0, 0x00, 0x00, 0x00, 0x1f, 0x00, 0x03, 0xc0, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x00, 0x00, 0x00, 0x3a, 0x00, 0x01, 0xc0, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0xdc, 0x00, 0x00, 0x00, 0x7e, 0x00, 0x01, 0xe0, 0x00, 0x00, 0x00,
+  0x04, 0x10, 0x38, 0x07, 0x00, 0x7e, 0x00, 0x00, 0x00, 0x5e, 0x00, 0x00, 0xf0, 0x00, 0x00, 0x00,
+  0x02, 0x20, 0x44, 0x08, 0x80, 0x3f, 0x00, 0x00, 0x00, 0xe8, 0x00, 0x00, 0x70, 0x00, 0x00, 0x00,
+  0x02, 0x20, 0x04, 0x08, 0x80, 0x37, 0x00, 0x00, 0x01, 0xf8, 0x00, 0x00, 0x70, 0x00, 0x00, 0x00,
+  0x02, 0x20, 0x04, 0x08, 0x80, 0x1d, 0xc0, 0x00, 0x01, 0xd0, 0x00, 0x00, 0x38, 0x00, 0x00, 0x00,
+  0x01, 0x40, 0x08, 0x08, 0x80, 0x0f, 0x40, 0x00, 0x03, 0x70, 0x00, 0x00, 0x3c, 0x00, 0x00, 0x00,
+  0x01, 0x40, 0x18, 0x08, 0x80, 0x0f, 0xe0, 0x00, 0x07, 0xe0, 0x00, 0x00, 0x1c, 0x00, 0x00, 0x00,
+  0x01, 0x40, 0x30, 0x08, 0x80, 0x07, 0xf0, 0x00, 0x0f, 0x60, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00,
+  0x00, 0x80, 0x40, 0x48, 0x80, 0x03, 0xd8, 0x00, 0x0e, 0xc0, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00,
+  0x00, 0x80, 0x7c, 0x47, 0x00, 0x01, 0xec, 0x00, 0x3b, 0x80, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x03, 0x80, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf7, 0xc3, 0xee, 0x00, 0x00, 0x00, 0x03, 0x80, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7d, 0xff, 0xb6, 0x00, 0x00, 0x00, 0x01, 0xc0, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0xaa, 0xf8, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xf5, 0x38, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0xdf, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x38, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xef, 0x80, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x08, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x10, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xe0, 0x00
+};
+
+//-----------------------------------------------------------------------------------------------------------------
+void setup() {
+  BlynkEdgent.begin();
+  Serial.begin(SERIAL_BAUD);
+
+  unsigned status;
+
+  //Setup the built in LED
+  pinMode(ledPin, OUTPUT);
+
+  WiFiDrv::pinMode(25, OUTPUT);
+  WiFiDrv::pinMode(26, OUTPUT);
+  WiFiDrv::pinMode(27, OUTPUT);
+  // End Setup the built in LED
+
+
+  //Setup 8 Relay Module
+
+  pinMode(rLEDLight, OUTPUT);
+  pinMode(rHumidifier, OUTPUT);
+  pinMode(rFreshairFan, OUTPUT);
+  pinMode(rBedHeater, OUTPUT);
+  pinMode(rUVLight, OUTPUT);
+  pinMode(rAirHeater, OUTPUT);
+
+  //End Setup 8 Relay Module
+
+  //OneWireStuff
+
+  //OLED
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize the SSD1306 OLED display with I2C address = 0x3D
+  // clear the display buffer.
+  display.clearDisplay();                              // Make sure the display is cleared
+  display.drawBitmap(0, 0, myBitmap, 128, 64, WHITE);  // drawBitmap(x position, y position, bitmap data, bitmap width, bitmap height, color)
+  display.display();                                   // Update the display
+  delay(3000);
+
+  // clear the display buffer.
+  display.clearDisplay();
+  display.setTextSize(1);              // text size = 1
+  display.setTextColor(WHITE, BLACK);  // set text color to white and black background
+  display.setTextWrap(false);          // disable text wrap
+
+  //OLED
+
+  //Time Stuff
+  setSyncInterval(10 * 60);  // Sync interval in seconds (10 minutes)
+
+
+  // T I M E R S
+  timer.setInterval(10000L, clockDisplay);
+  sensortimer.setInterval(1000L, readSensors);
+  actionlogictimer.setInterval(3000L, actionlogic);
+  freshairfantimer.setInterval(1800000L, freshair);
+  lighttimer.setInterval(5000L, checkTime);  // Check time every 5 seconds (This is close enough)
+
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Setting up bme280");
+  display.setCursor(0, 20);
+  display.print("-------------");
+  display.display();  // update the display
+
+  status = bme.begin(0x76);
+  // You can also pass in a Wire library object like &Wire2
+  // status = bme.begin(0x76, &Wire2)
+  if (!status) {
+    if (debug = 1) {
+      Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
+      Serial.print("SensorID was: 0x");
+      Serial.println(bme.sensorID(), 16);
+      Serial.print("        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
+      Serial.print("   ID of 0x56-0x58 represents a BMP 280,\n");
+      Serial.print("        ID of 0x60 represents a BME 280.\n");
+      Serial.print("        ID of 0x61 represents a BME 680.\n");
+    }
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("bme280 Failure");
+    display.setCursor(0, 20);
+    display.print("-------------");
+    display.display();  // update the display
+    while (1) delay(10);
+  }
+
+  //Start with everything off by setting pins to rOff aka HIGH
+  digitalWrite(rLEDLight, rOff);
+  digitalWrite(rHumidifier, rOff);
+  digitalWrite(rFreshairFan, rOff);
+  digitalWrite(rBedHeater, rOff);
+  digitalWrite(rUVLight, rOff);
+  digitalWrite(rAirHeater, rOff);
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Boot Complete");
+  display.setCursor(0, 20);
+  display.print("Entering Run Mode");
+  display.display();  // update the display
+}
+
+BLYNK_WRITE(V40) {
+  TimeInputParam t(param);
+  LEDstartHour = t.getStartHour();
+  LEDstartMinute = t.getStartMinute();
+  LEDstopHour = t.getStopHour();
+  LEDstopMinute = t.getStopMinute();
+}
+
+BLYNK_WRITE(V41) {
+  TimeInputParam t(param);
+  UVstartHour = t.getStartHour();
+  UVstartMinute = t.getStartMinute();
+  UVstopHour = t.getStopHour();
+  UVstopMinute = t.getStopMinute();
+}
+//-----------------------------------------------------------------------------------------------------------------
+void loop() {
+  BlynkEdgent.run();
+  timer.run();
+  sensortimer.run();
+  actionlogictimer.run();
+  freshairfantimer.run();
+  lighttimer.run();
+  displayValues();  //Updates Displays (OLED AND BLYNK)
+}
+
+//Setting from Blynk App
+BLYNK_WRITE(V30) {
+  //reads the slider value when it changes in the app
+  DayHumidity = param.asInt();
+}
+
+BLYNK_WRITE(V31) {
+  //reads the slider value when it changes in the app
+  NightHumidity = param.asInt();
+}
+
+BLYNK_WRITE(V32) {
+  //reads the slider value when it changes in the app
+  DayAirTemp = param.asInt();
+}
+
+BLYNK_WRITE(V33) {
+  //reads the slider value when it changes in the app
+  NightAirTemp = param.asInt();
+}
+
+BLYNK_WRITE(V34) {
+  //reads the slider value when it changes in the app
+  DayBedTemp = param.asInt();
+}
+
+BLYNK_WRITE(V35) {
+  //reads the slider value when it changes in the app
+  NightBedTemp = param.asInt();
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+
+
+void readSensors() {
+  sensors.requestTemperatures();
+  CurrentBedTemp = sensors.getTempCByIndex(0) * 9 / 5 + 32;
+  CurrentAirTemp = bme.readTemperature() * 9 / 5 + 32;
+  CurrentHumidity = bme.readHumidity();
+  CurrentAirPRessure = bme.readPressure();
+}
+
+void displayValues() {
+
+  //need to setup the datastreams in Blynk, add them to the app.
+  //realtime Status
+  Blynk.virtualWrite(V10, !digitalRead(rLEDLight));
+  Blynk.virtualWrite(V11, !digitalRead(rHumidifier));
+  Blynk.virtualWrite(V12, !digitalRead(rFreshairFan));
+  Blynk.virtualWrite(V13, !digitalRead(rBedHeater));
+  Blynk.virtualWrite(V14, !digitalRead(rUVLight));
+  Blynk.virtualWrite(V15, !digitalRead(rAirHeater));
+
+
+  int displayCycles = displayCycles + 1;
+
+  if (displayCycles == 5) {
+    display.clearDisplay();                              // Make sure the display is cleared
+    display.drawBitmap(0, 0, myBitmap, 128, 64, WHITE);  // drawBitmap(x position, y position, bitmap data, bitmap width, bitmap height, color)
+    display.display();                                   // Update the display
+    displayCycles = 0;
+  }
+
+  Blynk.virtualWrite(V5, CurrentAirPRessure);
+  Blynk.virtualWrite(V1, CurrentAirTemp);
+  Blynk.virtualWrite(V0, CurrentHumidity);
+
+  delay(2000);
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, (displayCycles * 4));
+  display.print("Air Temp");
+  display.setCursor(0, 20 + (displayCycles * 4));
+  display.print(CurrentAirTemp);
+  display.display();  // update the display
+
+  delay(2000);
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, (displayCycles * 4));
+  display.print("Humidity");
+  display.setCursor(0, 20 + (displayCycles * 4));
+  display.print(CurrentHumidity);
+  display.display();  // update the display
+
+  delay(2000);
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, (displayCycles * 4));
+  display.print("Bed Temp");
+  display.setCursor(0, 20 + (displayCycles * 4));
+  display.print(CurrentBedTemp);
+  display.display();  // update the display
+}
+
+void freshair() {
+  digitalWrite(rFreshairFan, rOn);
+  delay(5000);
+  digitalWrite(rFreshairFan, rOff);
+}
+
+void actionlogic() {
+
+  //Ned to add code to see if it is day or night thenuse the corresponding values instead of the hard coded values.  These values should be read from Blink
+
+  daytime = ((digitalRead(rLEDLight) == rOn) || (digitalRead(rUVLight) == rOn));
+
+  //AirTemp hot or too humid  (Maybe do some other logic here) ----------------------------------
+  if ((CurrentAirTemp > 95) || (CurrentHumidity > 80)) {
+    digitalWrite(rFreshairFan, rOn);
+    digitalWrite(rHumidifier, rOff);
+  } else {
+    digitalWrite(rFreshairFan, rOff);
+  }
+
+  //AirTemp cold --------------------------------------------------------------------
+
+  if (daytime) {
+      AdjustedAirTemp = DayAirTemp;
+    }
+  else {
+    AdjustedAirTemp = NightAirTemp;
+  }
+
+Blynk.virtualWrite(V16, "Air Temp Current Target: " + String(AdjustedAirTemp) + "°F");
+
+  if (CurrentAirTemp < AdjustedAirTemp) {
+    digitalWrite(rAirHeater, rOn);
+  } else {
+    digitalWrite(rAirHeater, rOff);
+  }
+
+  //Humidify low --------------------------------------------------------------------
+
+  if (daytime) {
+      AdjustedHumidity = DayHumidity;
+    }
+  else {
+    AdjustedHumidity = NightHumidity;
+  }
+
+  Blynk.virtualWrite(V16, "Humidity Current Target: " + String(AdjustedHumidity) + "%");
+
+  if (CurrentHumidity < AdjustedHumidity) {
+    digitalWrite(rHumidifier, rOn);
+  } else {
+    digitalWrite(rHumidifier, rOff);
+  }
+
+  //HeatBed --------------------------------------------------------------------
+    if (daytime) {
+      AdjustedBedTemp = DayBedTemp;
+    }
+  else {
+    AdjustedBedTemp = NightBedTemp;
+  }
+
+  Blynk.virtualWrite(V16, "Bed Temp Current Target: " + String(AdjustedBedTemp) + "°F");
+  
+  if (CurrentBedTemp < AdjustedBedTemp) {
+    digitalWrite(rBedHeater, rOn);
+  } else {
+    digitalWrite(rBedHeater, rOff);
+  }
+}
+
+// Digital clock display of the time
+void clockDisplay() {
+  // You can call hour(), minute(), ... at any time
+  // Please see Time library examples for details
+
+  String currentTime = String(hour()) + ":" + minute() + ":" + second();
+  String currentDate = String(month()) + "/" + day() + "/" + year();
+
+  // Send time to the App
+  Blynk.virtualWrite(V3, currentTime);
+  // Send date to the App
+  Blynk.virtualWrite(V4, currentDate);
+}
+
+BLYNK_CONNECTED() {                   //When device is connected to server...
+  Blynk.sendInternal("rtc", "sync");  //request current local time for device
+  //When Blynk connects, get the settings values.
+}
+
+void checkTime() {
+  //if (Blynk.connected()) {
+  //  Blynk.syncVirtual(V1);  // Update RTC widget, if you set it to Virtual pin V1
+  //}
+
+  int currentMinute = minute();
+  int currentHour = hour();
+
+  // LED Light control based on start and stop times from Time Input widget
+  if ((currentHour > LEDstartHour || (currentHour == LEDstartHour && currentMinute >= LEDstartMinute)) && (currentHour < LEDstopHour || (currentHour == LEDstopHour && currentMinute <= LEDstopMinute))) {
+    digitalWrite(rLEDLight, rOn);
+  } else {
+    digitalWrite(rLEDLight, rOff);
+  }
+
+  // UV Light control based on start and stop times from Time Input widget
+  if ((currentHour > UVstartHour || (currentHour == UVstartHour && currentMinute >= UVstartMinute)) && (currentHour < UVstopHour || (currentHour == UVstopHour && currentMinute <= UVstopMinute))) {
+    digitalWrite(rUVLight, rOn);
+  } else {
+    digitalWrite(rUVLight, rOff);
+  }
+}
